@@ -4,4 +4,5 @@ plugins:
     client: true
   etiquette_post_min_toxicity_confidence:
     default: 0.9
-    client: false
+  etiquette_google_api_key:
+    default: ''

@@ -26,7 +26,7 @@ module DiscourseEtiquette
     analyze_comment = AnalyzeComment.new(post)
 
     @conn ||= Excon.new(
-      ANALYZE_COMMENT_ENDPOINT,
+      "#{ANALYZE_COMMENT_ENDPOINT}?key=#{SiteSetting.etiquette_google_api_key}",
       ssl_verify_peer: true,
       retry_limit: 0
     )
