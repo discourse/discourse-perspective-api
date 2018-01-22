@@ -1,0 +1,7 @@
+plugins:
+  etiquette_enabled:
+    default: true
+    client: true
+  etiquette_post_min_toxicity_confidence:
+    default: 0.9
+    client: false

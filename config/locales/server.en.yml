@@ -1,0 +1,5 @@
+en:
+  site_settings:
+    etiquette_enabled: 'Flag possible toxic post and send messages to moderators.'
+    etiquette_post_min_toxicity_confidence: "The confidence level of post toxicity. The default value is reasonable. Change it until you understand Google's Perspective API."
+  etiquette_flag_message: "Highly likely a toxic post."
