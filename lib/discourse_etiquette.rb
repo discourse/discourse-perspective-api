@@ -2,7 +2,7 @@ module DiscourseEtiquette
   ANALYZE_COMMENT_ENDPOINT = 'https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze'
 
   class AnalyzeComment
-    def initizalize(post)
+    def initialize(post)
       @post = post
     end
 
@@ -35,7 +35,7 @@ module DiscourseEtiquette
     headers = {
       'Accept' => '*/*',
       'Content-Length' => body.bytesize,
-      'Content-Type' => content_type,
+      'Content-Type' => 'application/json',
       'User-Agent' => "Discourse/" + Discourse::VERSION::STRING,
     }
     @conn.post(headers: headers, body: body, persistent: true)
