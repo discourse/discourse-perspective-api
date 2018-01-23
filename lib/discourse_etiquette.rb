@@ -62,8 +62,8 @@ module DiscourseEtiquette
   def self.should_check_post?(post)
     return false if post.blank? || (!SiteSetting.etiquette_enabled?)
 
-    # We don't run etiquette on private messages
-    return false if post.topic.private_message?
+    # admin can choose whether to flag private messages. The message will be sent to moderators.
+    return false if !SiteSetting.etiquette_check_private_message && post.topic.private_message?
 
     stripped = post.raw.strip
 
