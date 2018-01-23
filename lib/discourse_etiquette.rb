@@ -17,7 +17,7 @@ module DiscourseEtiquette
           }
         },
         doNotStore: false,
-        sessionId: @post.user_id
+        sessionId: @post.user_id.to_s
       }.to_json
     end
   end
@@ -43,12 +43,12 @@ module DiscourseEtiquette
 
   def self.extract_value_from_analyze_comment_response(response)
     score = response['attributeScores']['TOXICITY']
-    score.dig('summaryScore', 'value') || 0
+    score.dig('summaryScore', 'value') || 0.0
   end
 
   def self.check_post_toxicity(post)
     response = self.request_analyze_comment(post)
-    confidence = self.extract_value_from_analyze_comment_response(response)
+    confidence = self.extract_value_from_analyze_comment_response(JSON.load(response.body))
     if confidence > SiteSetting.etiquette_post_min_toxicity_confidence
       PostActionCreator
         .new(Discourse.system_user, post)
