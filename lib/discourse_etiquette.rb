@@ -50,9 +50,12 @@ module DiscourseEtiquette
     response = self.request_analyze_comment(post)
     confidence = self.extract_value_from_analyze_comment_response(JSON.load(response.body))
     if confidence > SiteSetting.etiquette_post_min_toxicity_confidence
-      PostActionCreator
-        .new(Discourse.system_user, post)
-        .perform(PostActionType.types[:notify_moderators], message: I18n.t('etiquette_flag_message'))
+      PostAction.act(
+        Discourse.system_user,
+        post,
+        PostActionType.types[:notify_moderators],
+        message: I18n.t('etiquette_flag_message')
+      )
     end
   end
 
