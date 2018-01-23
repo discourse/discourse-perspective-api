@@ -2,7 +2,9 @@ plugins:
   etiquette_enabled:
     default: true
     client: true
-  etiquette_post_min_toxicity_confidence:
+  etiquette_flag_post_min_toxicity_confidence:
     default: 0.9
+  etiquette_notify_posting_min_toxicity_confidence:
+    default: 0.7
   etiquette_google_api_key:
     default: ''
