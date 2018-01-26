@@ -4,8 +4,12 @@ plugins:
     client: true
   etiquette_flag_post_min_toxicity_confidence:
     default: 0.9
+  etiquette_flag_post_min_severe_toxicity_confidence:
+    default: 0.8
   etiquette_notify_posting_min_toxicity_confidence:
-    default: 0.7
+    default: 0.85
+  etiquette_notify_posting_min_severe_toxicity_confidence:
+    default: 0.75
   etiquette_google_api_key:
     default: ''
   etiquette_check_private_message:

@@ -14,10 +14,13 @@ module DiscourseEtiquette
         requestedAttributes: {
           TOXICITY: {
             scoreType: 'PROBABILITY'
+          },
+          SEVERE_TOXICITY: {
+            scoreType: 'PROBABILITY'
           }
         },
         doNotStore: false,
-        sessionId: @post.user_id.to_s
+        sessionId: "#{Discourse.base_url}_#{@post.user_id}"
       }.to_json
     end
   end
@@ -36,20 +39,22 @@ module DiscourseEtiquette
       'Accept' => '*/*',
       'Content-Length' => body.bytesize,
       'Content-Type' => 'application/json',
-      'User-Agent' => "Discourse/" + Discourse::VERSION::STRING,
+      'User-Agent' => "Discourse/#{Discourse::VERSION::STRING}",
     }
     @conn.post(headers: headers, body: body, persistent: true)
   end
 
   def self.extract_value_from_analyze_comment_response(response)
-    score = response['attributeScores']['TOXICITY']
-    score.dig('summaryScore', 'value') || 0.0
+    score = response['attributeScores'].map do |attribute|
+      attribute.dig('summaryScore', 'value') || 0.0
+    end
   end
 
   def self.check_post_toxicity(post)
     response = self.request_analyze_comment(post)
-    confidence = self.extract_value_from_analyze_comment_response(JSON.load(response.body))
-    if confidence > SiteSetting.etiquette_post_min_toxicity_confidence
+    scores = self.extract_value_from_analyze_comment_response(JSON.load(response.body))
+    if scores['TOXICITY'] > SiteSetting.etiquette_post_min_toxicity_confidence ||
+        scores['SEVERE_TOXICITY'] > SiteSetting.etiquette_post_min_severe_toxicity_confidence
       PostAction.act(
         Discourse.system_user,
         post,
