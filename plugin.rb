@@ -28,18 +28,40 @@ after_initialize do
     end
   end
 
-  # require_dependency "application_controller"
+  require_dependency "application_controller"
 
-  # class Etiquette::Controller < ::ApplicationController
-  #   requires_plugin PLUGIN_NAME
-  #   before_action :ensure_logged_in
+  module ::Etiquette
+    class EtiquetteMessagesController < ::ApplicationController
+      requires_plugin PLUGIN_NAME
+      before_action :ensure_logged_in
 
+      def show
+        if scores = check_content(params[:concat])
+          render json: scores
+        else
+          render :nothing, status: 422
+        end
+      end
 
-  # Presence::Engine.routes.draw do
-  # end
+      private
 
-  # Discourse::Application.routes.append do
-  #   mount ::Etiquette::Engine, at: '/etiquette'
-  # end
+      def check_content(content)
+        !content.empty? && DiscourseEtiquette.check_content_toxicity(content, current_user)
+      end
+    end
+
+    class Engine < ::Rails::Engine
+      engine_name PLUGIN_NAME
+      isolate_namespace Etiquette
+    end
+  end
+
+  Etiquette::Engine.routes.draw do
+    get 'etiquette_messages' => 'etiquette_messages#show'
+  end
+
+  Discourse::Application.routes.append do
+    mount ::Etiquette::Engine, at: '/'
+  end
 
 end

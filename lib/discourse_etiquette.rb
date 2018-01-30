@@ -45,16 +45,20 @@ module DiscourseEtiquette
   end
 
   def self.extract_value_from_analyze_comment_response(response)
-    score = response['attributeScores'].map do |attribute|
-      attribute.dig('summaryScore', 'value') || 0.0
+    begin
+      Hash[response['attributeScores'].map do |attribute|
+        [attribute[0].downcase, attribute[1].dig('summaryScore', 'value') || 0.0]
+      end].symbolize_keys
+    rescue
+      Hash.new.tap do |dummy|
+        dummy.default = 0.0
+      end
     end
   end
 
-  def self.check_post_toxicity(post)
-    response = self.request_analyze_comment(post)
-    scores = self.extract_value_from_analyze_comment_response(JSON.load(response.body))
-    if scores['TOXICITY'] > SiteSetting.etiquette_post_min_toxicity_confidence ||
-        scores['SEVERE_TOXICITY'] > SiteSetting.etiquette_post_min_severe_toxicity_confidence
+  def self.flag_on_scores(scores)
+    if scores[:toxicity] > SiteSetting.etiquette_post_min_toxicity_confidence ||
+      scores[:severe_toxicity] > SiteSetting.etiquette_post_min_severe_toxicity_confidence
       PostAction.act(
         Discourse.system_user,
         post,
@@ -62,6 +66,39 @@ module DiscourseEtiquette
         message: I18n.t('etiquette_flag_message')
       )
     end
+  end
+
+  def self.check_post_toxicity(post)
+    response = self.request_analyze_comment(post)
+    scores = self.extract_value_from_analyze_comment_response(JSON.load(response.body))
+    self.flag_on_scores(scores)
+    scores
+  end
+
+  RawContent = Struct.new(:raw, :user_id)
+  def self.check_content_toxicity(content, user)
+    post = RawContent.new(content, user.id)
+    response = self.request_analyze_comment(post)
+    self.extract_value_from_analyze_comment_response(JSON.load(response.body))
+  end
+
+  def self.request_analyze_comment(post)
+    analyze_comment = AnalyzeComment.new(post)
+
+    @conn ||= Excon.new(
+      "#{ANALYZE_COMMENT_ENDPOINT}?key=#{SiteSetting.etiquette_google_api_key}",
+      ssl_verify_peer: true,
+      retry_limit: 0
+    )
+
+    body = analyze_comment.to_json
+    headers = {
+      'Accept' => '*/*',
+      'Content-Length' => body.bytesize,
+      'Content-Type' => 'application/json',
+      'User-Agent' => "Discourse/#{Discourse::VERSION::STRING}",
+    }
+    @conn.post(headers: headers, body: body, persistent: true)
   end
 
   def self.should_check_post?(post)
