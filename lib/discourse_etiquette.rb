@@ -1,9 +1,11 @@
 module DiscourseEtiquette
   ANALYZE_COMMENT_ENDPOINT = 'https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze'
+  class NetworkError < StandardError; end
 
   class AnalyzeComment
-    def initialize(post)
+    def initialize(post, user_id)
       @post = post
+      @user_id = user_id
     end
 
     def to_json
@@ -19,29 +21,20 @@ module DiscourseEtiquette
             scoreType: 'PROBABILITY'
           }
         },
-        doNotStore: false,
-        sessionId: "#{Discourse.base_url}_#{@post.user_id}"
+        doNotStore: true,
+        sessionId: "#{Discourse.base_url}_#{@user_id}"
       }.to_json
     end
   end
 
-  def self.request_analyze_comment(post)
-    analyze_comment = AnalyzeComment.new(post)
-
-    @conn ||= Excon.new(
-      "#{ANALYZE_COMMENT_ENDPOINT}?key=#{SiteSetting.etiquette_google_api_key}",
+  def self.proxy_request_options
+    @proxy_request_options ||= {
+      connect_timeout: 5, # in seconds
+      read_timeout: 5,
+      write_timeout: 10,
       ssl_verify_peer: true,
       retry_limit: 0
-    )
-
-    body = analyze_comment.to_json
-    headers = {
-      'Accept' => '*/*',
-      'Content-Length' => body.bytesize,
-      'Content-Type' => 'application/json',
-      'User-Agent' => "Discourse/#{Discourse::VERSION::STRING}",
     }
-    @conn.post(headers: headers, body: body, persistent: true)
   end
 
   def self.extract_value_from_analyze_comment_response(response)
@@ -76,19 +69,18 @@ module DiscourseEtiquette
   end
 
   RawContent = Struct.new(:raw, :user_id)
-  def self.check_content_toxicity(content, user)
-    post = RawContent.new(content, user.id)
+  def self.check_content_toxicity(content, user_id)
+    post = RawContent.new(content, user_id)
     response = self.request_analyze_comment(post)
     self.extract_value_from_analyze_comment_response(JSON.load(response.body))
   end
 
   def self.request_analyze_comment(post)
-    analyze_comment = AnalyzeComment.new(post)
+    analyze_comment = AnalyzeComment.new(post, post.user_id)
 
     @conn ||= Excon.new(
       "#{ANALYZE_COMMENT_ENDPOINT}?key=#{SiteSetting.etiquette_google_api_key}",
-      ssl_verify_peer: true,
-      retry_limit: 0
+      self.proxy_request_options
     )
 
     body = analyze_comment.to_json
@@ -98,7 +90,11 @@ module DiscourseEtiquette
       'Content-Type' => 'application/json',
       'User-Agent' => "Discourse/#{Discourse::VERSION::STRING}",
     }
-    @conn.post(headers: headers, body: body, persistent: true)
+    begin
+      @conn.post(headers: headers, body: body, persistent: true)
+    rescue
+      raise NetworkError, "Excon had some problems with Google's Perspective API."
+    end
   end
 
   def self.should_check_post?(post)

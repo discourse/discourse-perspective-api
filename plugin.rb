@@ -15,13 +15,6 @@ PLUGIN_NAME ||= "discourse-etiquette".freeze
 after_initialize do
   require_dependency File.expand_path('../jobs/flag_toxic_post.rb', __FILE__)
 
-  module ::Etiquette
-    class Engine < ::Rails::Engine
-      engine_name PLUGIN_NAME
-      # isolate_namespace Etiquette
-    end
-  end
-
   on(:post_created) do |post, params|
     if DiscourseEtiquette.should_check_post?(post)
       Jobs.enqueue(:flag_toxic_post, post_id: post.id)
@@ -33,9 +26,12 @@ after_initialize do
   module ::Etiquette
     class EtiquetteMessagesController < ::ApplicationController
       requires_plugin PLUGIN_NAME
-      before_action :ensure_logged_in
+      rescue_from DiscourseEtiquette::NetworkError do |err|
+        render :nothing, status: 422
+      end
 
       def show
+        # TODO: rate limit?
         if scores = check_content(params[:concat])
           render json: scores
         else
