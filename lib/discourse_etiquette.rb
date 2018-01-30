@@ -5,7 +5,7 @@ module DiscourseEtiquette
   class AnalyzeComment
     def initialize(post, user_id)
       @post = post
-      @user_id = user_id
+      @user_id = user_id || 'anonymous'
     end
 
     def to_json
@@ -37,7 +37,12 @@ module DiscourseEtiquette
     }
   end
 
+  def self.unload_json(response)
+    MultiJson.load(response) rescue {}
+  end
+
   def self.extract_value_from_analyze_comment_response(response)
+    response = self.unload_json(response)
     begin
       Hash[response['attributeScores'].map do |attribute|
         [attribute[0].downcase, attribute[1].dig('summaryScore', 'value') || 0.0]
@@ -63,7 +68,7 @@ module DiscourseEtiquette
 
   def self.check_post_toxicity(post)
     response = self.request_analyze_comment(post)
-    scores = self.extract_value_from_analyze_comment_response(JSON.load(response.body))
+    scores = self.extract_value_from_analyze_comment_response(response.body)
     self.flag_on_scores(scores)
     scores
   end
@@ -72,7 +77,7 @@ module DiscourseEtiquette
   def self.check_content_toxicity(content, user_id)
     post = RawContent.new(content, user_id)
     response = self.request_analyze_comment(post)
-    self.extract_value_from_analyze_comment_response(JSON.load(response.body))
+    self.extract_value_from_analyze_comment_response(response.body)
   end
 
   def self.request_analyze_comment(post)
