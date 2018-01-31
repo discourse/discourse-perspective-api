@@ -29,7 +29,10 @@ function initialize(api) {
 
       this._etiquetteMessage = message;
 
+      // const etiquetteMessages = this.get('etiquetteMessages');
       composer.store.find('etiquette-message', { concat }).then(response => {
+        // etiquetteMessages.clear();
+        // etiquetteMessages.pushObjects(response);
         if (response) {
           message.set('etiquetteMessages', response);
           this.send('popup', message);
