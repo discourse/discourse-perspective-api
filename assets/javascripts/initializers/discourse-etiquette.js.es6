@@ -9,10 +9,15 @@ function initialize(api) {
     _findSimilar() {
       this._super();
 
+      var concat = '';
       const composer = this.get('composer');
-      const title = composer.get('title');
-      const raw = composer.get('raw');
-      const concat = `${title} ${raw}`;
+      ['title', 'raw', 'reply'].forEach((item, _) => {
+        const content = composer.get(item);
+        if (content) {
+          concat += `${content} `;
+        }
+      });
+      concat.trim();
       if (concat === this._lastEtiquetteCheck) { return; }
       this._lastEtiquetteCheck = concat;
 
@@ -21,13 +26,12 @@ function initialize(api) {
         templateName: 'etiquette-message',
         extraClass: 'etiquette-message'
       });
-      console.log(message);
 
       this._etiquetteMessage = message;
 
       composer.store.find('etiquette-message', { concat }).then(response => {
         if (response) {
-          message.set(response);
+          message.set('etiquetteMessages', response);
           this.send('popup', message);
         } else if (message) {
           this.send('hideMessage', message);
@@ -41,7 +45,6 @@ export default {
   name: 'discourse-etiquette',
 
   initialize(container) {
-    console.log(container);
     const siteSettings = container.lookup('site-settings:main');
     if (siteSettings.etiquette_enabled) {
       withPluginApi('0.8.17', initialize);

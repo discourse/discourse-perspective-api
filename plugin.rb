@@ -33,7 +33,7 @@ after_initialize do
       def show
         # TODO: rate limit?
         if scores = check_content(params[:concat])
-          render json: scores
+          render json: { "etiquette_messages": [scores.merge(id: SecureRandom.hex)] }
         else
           render :nothing, status: 422
         end
@@ -42,7 +42,7 @@ after_initialize do
       private
 
       def check_content(content)
-        !content.empty? && DiscourseEtiquette.check_content_toxicity(content, current_user)
+        content&.present? && DiscourseEtiquette.check_content_toxicity(content, current_user)
       end
     end
 
