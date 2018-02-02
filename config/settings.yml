@@ -11,7 +11,7 @@ plugins:
     type: enum
     choices:
       - standard
-      - severe toxicity (exprimental)
+      - severe toxicity (experimental)
   etiquette_google_api_key:
     default: ''
   etiquette_check_private_message:

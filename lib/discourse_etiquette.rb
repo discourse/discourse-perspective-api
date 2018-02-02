@@ -20,7 +20,7 @@ module DiscourseEtiquette
       case SiteSetting.etiquette_toxicity_model
       when 'standard'
         payload[:requestedAttributes] = { TOXICITY: { scoreType: 'PROBABILITY' } }
-      when 'severe toxicity (exprimental)'
+      when 'severe toxicity (experimental)'
         payload[:requestedAttributes] = { SEVERE_TOXICITY: { scoreType: 'PROBABILITY' } }
       end
 
