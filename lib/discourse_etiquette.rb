@@ -9,21 +9,22 @@ module DiscourseEtiquette
     end
 
     def to_json
-      {
+      payload = {
         comment: {
           text: @post.raw
         },
-        requestedAttributes: {
-          TOXICITY: {
-            scoreType: 'PROBABILITY'
-          },
-          SEVERE_TOXICITY: {
-            scoreType: 'PROBABILITY'
-          }
-        },
         doNotStore: true,
         sessionId: "#{Discourse.base_url}_#{@user_id}"
-      }.to_json
+      }
+
+      case SiteSetting.etiquette_toxicity_model
+      when 'standard'
+        payload[:requestedAttributes] = { TOXICITY: { scoreType: 'PROBABILITY' } }
+      when 'severe toxicity (exprimental)'
+        payload[:requestedAttributes] = { SEVERE_TOXICITY: { scoreType: 'PROBABILITY' } }
+      end
+
+      payload.to_json
     end
   end
 
@@ -41,11 +42,12 @@ module DiscourseEtiquette
     MultiJson.load(response) rescue {}
   end
 
+  SCORE_KEY = 'score'
   def self.extract_value_from_analyze_comment_response(response)
     response = self.unload_json(response)
     begin
       Hash[response['attributeScores'].map do |attribute|
-        [attribute[0].downcase, attribute[1].dig('summaryScore', 'value') || 0.0]
+        [SCORE_KEY, attribute[1].dig('summaryScore', 'value') || 0.0]
       end].symbolize_keys
     rescue
       Hash.new.tap do |dummy|
@@ -54,9 +56,8 @@ module DiscourseEtiquette
     end
   end
 
-  def self.flag_on_scores(scores)
-    if scores[:toxicity] > SiteSetting.etiquette_post_min_toxicity_confidence ||
-      scores[:severe_toxicity] > SiteSetting.etiquette_post_min_severe_toxicity_confidence
+  def self.flag_on_scores(score)
+    if score[:score] > SiteSetting.etiquette_flag_post_min_toxicity_confidence
       PostAction.act(
         Discourse.system_user,
         post,
@@ -68,16 +69,19 @@ module DiscourseEtiquette
 
   def self.check_post_toxicity(post)
     response = self.request_analyze_comment(post)
-    scores = self.extract_value_from_analyze_comment_response(response.body)
-    self.flag_on_scores(scores)
-    scores
+    score = self.extract_value_from_analyze_comment_response(response.body)
+    self.flag_on_scores(score)
+    score
   end
 
   RawContent = Struct.new(:raw, :user_id)
   def self.check_content_toxicity(content, user_id)
     post = RawContent.new(content, user_id)
     response = self.request_analyze_comment(post)
-    self.extract_value_from_analyze_comment_response(response.body)
+    score = self.extract_value_from_analyze_comment_response(response.body)
+    if score[:score] > SiteSetting.etiquette_notify_posting_min_toxicity_confidence
+      score
+    end
   end
 
   def self.request_analyze_comment(post)

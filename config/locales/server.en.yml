@@ -2,9 +2,8 @@ en:
   site_settings:
     etiquette_enabled: 'Flag possible toxic post and send messages to moderators.'
     etiquette_flag_post_min_toxicity_confidence: "The confidence level of post toxicity. The default value is reasonably high. Change it until you understand Google's Perspective API."
-    etiquette_flag_post_min_severe_toxicity_confidence: "Same as `etiquette_flag_post_min_toxicity_confidence` but checks severe toxic content."
     etiquette_notify_posting_min_toxicity_confidence: "The confidence level of post toxicity. Show a notification in the editor when user types something hurtful."
-    etiquette_notify_posting_min_severe_toxicity_confidence: "Same as `etiquette_notify_posting_min_toxicity_confidence` but checks severe toxic content."
+    etiquette_toxicity_model: "Choose toxicity model to check content. Used for Google's Perspective API."
     etiquette_google_api_key: "Google API key for Perspective API."
     etiquette_check_private_message: "Check and flag private message if toxic. Noted that the message will be sent to moderators."
   etiquette_flag_message: "Highly likely a toxic post."

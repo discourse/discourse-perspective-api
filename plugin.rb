@@ -35,7 +35,7 @@ after_initialize do
         if scores = check_content(params[:concat])
           render json: { "etiquette_messages": [scores.merge(id: SecureRandom.hex)] }
         else
-          render :nothing, status: 422
+          render json: { "etiquette_messages": [] }
         end
       end
 
