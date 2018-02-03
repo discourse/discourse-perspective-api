@@ -26,16 +26,24 @@ after_initialize do
   module ::Etiquette
     class EtiquetteMessagesController < ::ApplicationController
       requires_plugin PLUGIN_NAME
-      rescue_from DiscourseEtiquette::NetworkError do |err|
-        render :nothing, status: 422
-      end
 
       def show
-        # TODO: rate limit?
-        if scores = check_content(params[:concat])
-          render json: { "etiquette_messages": [scores.merge(id: SecureRandom.hex)] }
+        if current_user
+          RateLimiter.new(current_user, "etiquette-messages", 6, 1.minute).performed!
         else
-          render json: { "etiquette_messages": [] }
+          RateLimiter.new(nil, "etiquette-messages-#{request.remote_ip}", 6, 1.minute).performed!
+        end
+
+        hijack do
+          begin
+            if scores = check_content(params[:concat])
+              render json: { "etiquette_messages": [scores.merge(id: SecureRandom.hex)] }
+            else
+              render json: { "etiquette_messages": [] }
+            end
+          rescue => e
+            render json: { "etiquette_messages": [] }, status: 422
+          end
         end
       end
 
