@@ -1,45 +1,52 @@
 import { withPluginApi } from 'discourse/lib/plugin-api';
 
 function initialize(api) {
-  api.modifyClass('component:composer-messages', {
-    _lastEtiquetteCheck: null,
-    _etiquetteMessage: null,
+  api.modifyClass('controller:composer', {
+    save(force) {
+      // same validataion code from controller
+      if (this.get("disableSubmit")) return;
+      if (!this.get('showWarning')) {
+        this.set('model.isWarning', false);
+      }
+      const composer = this.get('model');
+      if (composer.get('cantSubmitPost')) {
+        this.set('lastValidatedAt', Date.now());
+        return;
+      }
 
-    // _findSimilar periodically runs, hook into this point
-    _findSimilar() {
-      this._super();
+      if (!force) {
+        var concat = '';
+        ['title', 'raw', 'reply'].forEach((item, _) => {
+          const content = composer.get(item);
+          if (content) {
+            concat += `${content} `;
+          }
+        });
+        concat.trim();
+        composer.store.find('etiquette-message', { concat }).then(response => {
+          if (response) {
+            const message = I18n.t("etiquette.etiquette_message");
 
-      var concat = '';
-      const composer = this.get('composer');
-      ['title', 'raw', 'reply'].forEach((item, _) => {
-        const content = composer.get(item);
-        if (content) {
-          concat += `${content} `;
-        }
-      });
-      concat.trim();
-      if (concat === this._lastEtiquetteCheck) { return; }
-      this._lastEtiquetteCheck = concat;
+            let buttons = [{
+              "label": I18n.t("etiquette.composer_continue"),
+              "class": "btn",
+              callback: () => this.save(true)
+            }, {
+              "label": I18n.t("etiquette.composer_edit"),
+              "class": "btn-primary"
+            }];
+            bootbox.dialog(message, buttons);
+            return;
+          } else {
+            this._super(force);
+          }
+        }).catch(() => { // fail silently
+          this._super(force);
+        });
+      } else {
+        this._super(force);
+      }
 
-      const message = this._etiquetteMessage || composer.store.createRecord('composer-message', {
-        id: 'etiquette_message',
-        templateName: 'etiquette-message',
-        extraClass: 'etiquette-message'
-      });
-
-      this._etiquetteMessage = message;
-
-      // const etiquetteMessages = this.get('etiquetteMessages');
-      composer.store.find('etiquette-message', { concat }).then(response => {
-        // etiquetteMessages.clear();
-        // etiquetteMessages.pushObjects(response);
-        if (response) {
-          message.set('etiquetteMessages', response);
-          this.send('popup', message);
-        } else if (message) {
-          this.send('hideMessage', message);
-        }
-      });
     }
   });
 }

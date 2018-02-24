@@ -1,6 +1,8 @@
 en:
   js:
     etiquette:
-      etiquette_messages: "Your post is considered harmful..."
-      etiquette_warning: "Please read your post again before consider to publish. People may get offended and flag your post."
+      etiquette_message: "It looks like what you're about to post might be considered rude or disrespectful to others, and may be flagged for review."
+      composer_edit: "Go back and edit"
+      composer_continue: "Continue posting"
+
 

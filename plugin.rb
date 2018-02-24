@@ -13,7 +13,7 @@ load File.expand_path('../lib/discourse_etiquette.rb', __FILE__)
 PLUGIN_NAME ||= "discourse-etiquette".freeze
 
 after_initialize do
-  require_dependency File.expand_path('../jobs/flag_toxic_post.rb', __FILE__)
+  load File.expand_path('../jobs/flag_toxic_post.rb', __FILE__)
 
   on(:post_created) do |post, params|
     if DiscourseEtiquette.should_check_post?(post)
