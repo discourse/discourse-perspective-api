@@ -1,6 +1,6 @@
 # name: discourse-etiquette
 # about: Mark uncivil posts by Google's Perspective API
-# version: 1.0
+# version: 1.1
 # authors: Erick Guan
 # url: https://github.com/fantasticfears/discourse-etiquette
 
@@ -21,28 +21,30 @@ after_initialize do
     end
   end
 
+  # register_post_custom_field_type(DiscourseEtiquette::POST_CUSTOM_FIELD_NAME, :json)
+
   require_dependency "application_controller"
 
   module ::Etiquette
-    class EtiquetteMessagesController < ::ApplicationController
+    class PostToxicityController < ::ApplicationController
       requires_plugin PLUGIN_NAME
 
       def show
         if current_user
-          RateLimiter.new(current_user, "etiquette-messages", 6, 1.minute).performed!
+          RateLimiter.new(current_user, "post-toxicity", 6, 1.minute).performed!
         else
-          RateLimiter.new(nil, "etiquette-messages-#{request.remote_ip}", 6, 1.minute).performed!
+          RateLimiter.new(nil, "post-toxicity-#{request.remote_ip}", 6, 1.minute).performed!
         end
 
         hijack do
           begin
             if scores = check_content(params[:concat])
-              render json: { "etiquette_messages": [scores.merge(id: SecureRandom.hex)] }
+              render json: scores
             else
-              render json: { "etiquette_messages": [] }
+              render json: {}
             end
           rescue => e
-            render json: { "etiquette_messages": [] }, status: 422
+            render json: {}, status: 422
           end
         end
       end
@@ -61,11 +63,11 @@ after_initialize do
   end
 
   Etiquette::Engine.routes.draw do
-    get 'etiquette_messages' => 'etiquette_messages#show'
+    get 'post_toxicity' => 'post_toxicity#show'
   end
 
   Discourse::Application.routes.append do
-    mount ::Etiquette::Engine, at: '/'
+    mount ::Etiquette::Engine, at: '/etiquette'
   end
 
 end

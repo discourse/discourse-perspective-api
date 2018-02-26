@@ -1,7 +1,17 @@
 import { withPluginApi } from 'discourse/lib/plugin-api';
+import { ajax } from 'discourse/lib/ajax';
 
 function initialize(api) {
   api.modifyClass('controller:composer', {
+    _etiquette_checked: null,
+
+    etiquetteSave(force) {
+      this.set('_etiquette_checked', true);
+      this.save(force).finally(() => {
+        this.set('_etiquette_checked', false);
+      });
+    },
+
     save(force) {
       // same validataion code from controller
       if (this.get("disableSubmit")) return;
@@ -14,7 +24,7 @@ function initialize(api) {
         return;
       }
 
-      if (!force) {
+      if (!this.get('_etiquette_checked')) {
         var concat = '';
         ['title', 'raw', 'reply'].forEach((item, _) => {
           const content = composer.get(item);
@@ -23,14 +33,14 @@ function initialize(api) {
           }
         });
         concat.trim();
-        composer.store.find('etiquette-message', { concat }).then(response => {
-          if (response && response.content.length > 0) {
+        ajax(`/etiquette/post_toxicity?concat=${concat}`).then(response => {
+          if (response && response['score'] !== undefined) {
             const message = I18n.t("etiquette.etiquette_message");
 
             let buttons = [{
               "label": I18n.t("etiquette.composer_continue"),
               "class": "btn",
-              callback: () => this.save(true)
+              callback: () => this.etiquetteSave(force)
             }, {
               "label": I18n.t("etiquette.composer_edit"),
               "class": "btn-primary"
@@ -38,15 +48,14 @@ function initialize(api) {
             bootbox.dialog(message, buttons);
             return;
           } else {
-            this._super(true);
+            this.etiquetteSave(force);
           }
         }).catch(() => { // fail silently
-          this._super(true);
+          this.etiquetteSave(force);
         });
       } else {
-        this._super(force);
+        return this._super(force);
       }
-
     }
   });
 }
