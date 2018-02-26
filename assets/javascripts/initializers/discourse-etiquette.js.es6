@@ -24,7 +24,7 @@ function initialize(api) {
         });
         concat.trim();
         composer.store.find('etiquette-message', { concat }).then(response => {
-          if (response) {
+          if (response && response.content.length > 0) {
             const message = I18n.t("etiquette.etiquette_message");
 
             let buttons = [{
@@ -38,10 +38,10 @@ function initialize(api) {
             bootbox.dialog(message, buttons);
             return;
           } else {
-            this._super(force);
+            this._super(true);
           }
         }).catch(() => { // fail silently
-          this._super(force);
+          this._super(true);
         });
       } else {
         this._super(force);
