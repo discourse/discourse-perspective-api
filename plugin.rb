@@ -31,7 +31,7 @@ after_initialize do
 
       def show
         if current_user
-          RateLimiter.new(current_user, "post-toxicity", 6, 1.minute).performed!
+          RateLimiter.new(current_user, "post-toxicity", 8, 1.minute).performed!
         else
           RateLimiter.new(nil, "post-toxicity-#{request.remote_ip}", 6, 1.minute).performed!
         end
@@ -44,7 +44,7 @@ after_initialize do
               render json: {}
             end
           rescue => e
-            render json: {}, status: 422
+            render json: { errors: [error.full_message] }, status: 403
           end
         end
       end
