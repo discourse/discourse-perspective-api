@@ -14,6 +14,7 @@ PLUGIN_NAME ||= "discourse-etiquette".freeze
 
 after_initialize do
   load File.expand_path('../jobs/flag_toxic_post.rb', __FILE__)
+  load File.expand_path('../jobs/inspect_toxic_post.rb', __FILE__)
 
   on(:post_created) do |post, params|
     if DiscourseEtiquette.should_check_post?(post)
@@ -21,7 +22,7 @@ after_initialize do
     end
   end
 
-  # register_post_custom_field_type(DiscourseEtiquette::POST_CUSTOM_FIELD_NAME, :json)
+  register_post_custom_field_type(DiscourseEtiquette.post_score_field_name, :float)
 
   require_dependency "application_controller"
 

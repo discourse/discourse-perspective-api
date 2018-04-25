@@ -16,3 +16,9 @@ plugins:
     default: ''
   etiquette_check_private_message:
     default: false
+  etiquette_backfill_posts:
+    client: true
+    default: false
+  etiquette_historical_inspection_period:
+    default: 300
+

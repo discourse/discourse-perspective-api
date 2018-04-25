@@ -1,5 +1,8 @@
 module DiscourseEtiquette
-  ANALYZE_COMMENT_ENDPOINT = 'https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze'
+  ANALYZE_COMMENT_ENDPOINT = '/v1alpha1/comments:analyze'
+  GOOGLE_API_DOMAIN = 'https://commentanalyzer.googleapis.com'
+  POST_ANALYSIS_FIELD_PREFIX = 'post_etiquette'
+
   class NetworkError < StandardError; end
 
   class AnalyzeComment
@@ -9,9 +12,16 @@ module DiscourseEtiquette
     end
 
     def to_json
+      # This is a hard limit from Google API. (3000 bytes)
+      # Truncate naively here. Some long posts are PM and from Discourse.
+      # https://github.com/conversationai/perspectiveapi/blob/master/api_reference.md#scoring-comments-analyzecomment
+      raw = @post.raw[0..3000]
+      while raw.bytesize > 3000
+        raw = raw[0..-5]
+      end
       payload = {
         comment: {
-          text: @post.raw
+          text: raw
         },
         doNotStore: true,
         sessionId: "#{Discourse.base_url}_#{@user_id}"
@@ -30,11 +40,12 @@ module DiscourseEtiquette
 
   def self.proxy_request_options
     @proxy_request_options ||= {
-      connect_timeout: 5, # in seconds
-      read_timeout: 5,
-      write_timeout: 10,
+      connect_timeout: 1, # in seconds
+      read_timeout: 3,
+      write_timeout: 3,
       ssl_verify_peer: true,
-      retry_limit: 0
+      retry_limit: 0,
+      persistent: true
     }
   end
 
@@ -67,6 +78,22 @@ module DiscourseEtiquette
     end
   end
 
+  def self.post_score_field_name
+    case SiteSetting.etiquette_toxicity_model
+    when 'standard'
+      "#{POST_ANALYSIS_FIELD_PREFIX}_toxicity"
+    when 'severe toxicity (experimental)'
+      "#{POST_ANALYSIS_FIELD_PREFIX}_severe_toxicity"
+    end
+  end
+
+  def self.backfill_post_etiquette_check(post)
+    response = self.request_analyze_comment(post)
+    score = self.extract_value_from_analyze_comment_response(response.body)
+    post.custom_fields[self.post_score_field_name] = score[:score].to_f
+    post.save_custom_fields(true)
+  end
+
   def self.check_post_toxicity(post)
     response = self.request_analyze_comment(post)
     score = self.extract_value_from_analyze_comment_response(response.body)
@@ -85,12 +112,9 @@ module DiscourseEtiquette
   end
 
   def self.request_analyze_comment(post)
-    analyze_comment = AnalyzeComment.new(post, post.user_id)
+    analyze_comment = AnalyzeComment.new(post, post&.user_id)
 
-    @conn ||= Excon.new(
-      "#{ANALYZE_COMMENT_ENDPOINT}?key=#{SiteSetting.etiquette_google_api_key}",
-      self.proxy_request_options
-    )
+    @conn ||= Excon.new(GOOGLE_API_DOMAIN, self.proxy_request_options)
 
     body = analyze_comment.to_json
     headers = {
@@ -100,7 +124,7 @@ module DiscourseEtiquette
       'User-Agent' => "Discourse/#{Discourse::VERSION::STRING}",
     }
     begin
-      @conn.post(headers: headers, body: body, persistent: true)
+      @conn.request(method: :post, path: ANALYZE_COMMENT_ENDPOINT, query: { key: SiteSetting.etiquette_google_api_key }, headers: headers, body: body)
     rescue
       raise NetworkError, "Excon had some problems with Google's Perspective API."
     end
@@ -110,7 +134,8 @@ module DiscourseEtiquette
     return false if post.blank? || (!SiteSetting.etiquette_enabled?)
 
     # admin can choose whether to flag private messages. The message will be sent to moderators.
-    return false if !SiteSetting.etiquette_check_private_message && post.topic.private_message?
+    return false if !SiteSetting.etiquette_check_private_message && post&.topic&.private_message?
+    return false if post&.user_id <= 0 # system message
 
     stripped = post.raw.strip
 

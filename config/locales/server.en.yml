@@ -6,4 +6,6 @@ en:
     etiquette_toxicity_model: "Choose toxicity model to check content. Used for Google's Perspective API."
     etiquette_google_api_key: "Google API key for Perspective API."
     etiquette_check_private_message: "Check and flag private message if toxic. Noted that the message will be sent to moderators."
+    etiquette_backfill_posts: "Query with existing posts and record results in post custom fields; This mode disable online checking for posts."
+    etiquette_historical_inspection_period: "The period in days to start an new query iteration after finished last iteration. Used only if `etiquette_backfill_posts` is enabled"
   etiquette_flag_message: "Highly likely a toxic post."
