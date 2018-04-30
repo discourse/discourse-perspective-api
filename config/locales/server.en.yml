@@ -1,11 +1,11 @@
 en:
   site_settings:
-    etiquette_enabled: 'Flag possible toxic post and send messages to moderators.'
+    etiquette_enabled: 'Flag potentially toxic posts and notify moderators.'
     etiquette_flag_post_min_toxicity_confidence: "The confidence level of post toxicity. The default value is reasonably high. Change it until you understand Google's Perspective API."
-    etiquette_notify_posting_min_toxicity_confidence: "The confidence level of post toxicity. Show a notification in the editor when user types something hurtful."
+    etiquette_notify_posting_min_toxicity_confidence: "The confidence level of post toxicity. Show a notification in the editor when user types something potentially disruptive."
     etiquette_toxicity_model: "Choose toxicity model to check content. Used for Google's Perspective API."
     etiquette_google_api_key: "Google API key for Perspective API."
     etiquette_check_private_message: "Check and flag private message if toxic. Noted that the message will be sent to moderators."
-    etiquette_backfill_posts: "Query with existing posts and record results in post custom fields; This mode disable online checking for posts."
-    etiquette_historical_inspection_period: "The period in days to start an new query iteration after finished last iteration. Used only if `etiquette_backfill_posts` is enabled"
+    etiquette_backfill_posts: "Query with existing posts and record results in post custom fields; This mode disables online checking for posts."
+    etiquette_historical_inspection_period: "The period in days to start a new query iteration after finishingg last iteration. Used only if `etiquette_backfill_posts` is enabled"
   etiquette_flag_message: "Highly likely a toxic post."
