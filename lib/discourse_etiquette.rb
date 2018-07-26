@@ -135,7 +135,7 @@ module DiscourseEtiquette
 
     # admin can choose whether to flag private messages. The message will be sent to moderators.
     return false if !SiteSetting.etiquette_check_private_message && post&.topic&.private_message?
-    return false if post&.user_id <= 0 # system message
+    return false if (post&.user_id).to_i <= 0 # system message bot message or no user
 
     stripped = post.raw.strip
 
