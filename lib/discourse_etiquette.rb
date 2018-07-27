@@ -125,8 +125,8 @@ module DiscourseEtiquette
     }
     begin
       @conn.request(method: :post, path: ANALYZE_COMMENT_ENDPOINT, query: { key: SiteSetting.etiquette_google_api_key }, headers: headers, body: body)
-    rescue
-      raise NetworkError, "Excon had some problems with Google's Perspective API."
+    rescue => e
+      raise NetworkError, "Excon had some problems with Google's Perspective API. #{e}"
     end
   end
 
