@@ -46,6 +46,9 @@ module Jobs
       end
       store.set(FAILED_POST_ID_KEY, failed_post_ids[batch_size..-1].to_a)
 
+      DiscourseEtiquette.unstub(:should_check_post?)
+      DiscourseEtiquette.unstub(:backfill_post_etiquette_check)
+
       return batch_size - queued_post.size
     end
 
@@ -81,8 +84,9 @@ module Jobs
 
     def can_start_next_iteration?(last_id)
       last_checked_post_timestamp = store.get(LAST_CHECKED_TIME_KEY)&.to_datetime || 100.years.ago
+      last_post_id = Post.order(id: :asc).pluck(:id).last || 1
       DateTime.now >= last_checked_post_timestamp + SiteSetting.etiquette_historical_inspection_period &&
-        last_id >= Post.order(id: :asc).pluck(:id).last
+        last_id >= last_post_id
     end
 
     def start_new_iteration
