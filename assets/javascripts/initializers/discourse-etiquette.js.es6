@@ -65,7 +65,7 @@ export default {
 
   initialize(container) {
     const siteSettings = container.lookup('site-settings:main');
-    if (siteSettings.etiquette_enabled && etiquette_notify_posting_min_toxicity_enable) {
+    if (siteSettings.etiquette_enabled && siteSettings.etiquette_notify_posting_min_toxicity_enable) {
       withPluginApi('0.8.17', initialize);
     }
   }

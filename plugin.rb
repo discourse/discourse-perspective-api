@@ -17,7 +17,7 @@ after_initialize do
   load File.expand_path('../jobs/inspect_toxic_post.rb', __FILE__)
 
   on(:post_created) do |post, params|
-    if DiscourseEtiquette.should_check_post?(post)
+    if SiteSetting.etiquette_flag_post_min_toxicity_enable? && DiscourseEtiquette.should_check_post?(post)
       Jobs.enqueue(:flag_toxic_post, post_id: post.id)
     end
   end
