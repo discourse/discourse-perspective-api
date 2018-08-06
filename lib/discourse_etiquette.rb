@@ -88,45 +88,67 @@ module DiscourseEtiquette
   end
 
   def self.backfill_post_etiquette_check(post)
-    response = self.request_analyze_comment(post)
-    score = self.extract_value_from_analyze_comment_response(response.body)
+    score = self.score_comment(post)
     post.custom_fields[self.post_score_field_name] = score[:score].to_f
     post.save_custom_fields(true)
   end
 
   def self.check_post_toxicity(post)
-    response = self.request_analyze_comment(post)
-    score = self.extract_value_from_analyze_comment_response(response.body)
+    score = self.score_comment(post)
     self.flag_on_scores(score, post)
     score
   end
 
   RawContent = Struct.new(:raw, :user_id)
+
   def self.check_content_toxicity(content, user_id)
     post = RawContent.new(content, user_id)
-    response = self.request_analyze_comment(post)
-    score = self.extract_value_from_analyze_comment_response(response.body)
+    score = self.score_comment(post)
     if score[:score] > SiteSetting.etiquette_notify_posting_min_toxicity_confidence
       score
     end
   end
 
-  def self.request_analyze_comment(post)
-    analyze_comment = AnalyzeComment.new(post, post&.user_id)
+  @mutex = Mutex.new
+  def self.score_comment(post)
+    @mutex.synchronize do
+      analyze_comment = AnalyzeComment.new(post, post&.user_id)
 
-    @conn ||= Excon.new(GOOGLE_API_DOMAIN, self.proxy_request_options)
+      if @conn && @conn_created < 1.minute.ago
+        # this avoids a leak, Google have tons of IPs and certs just keep piling on
+        begin
+          @conn.reset
+        rescue
+          # trust the GC here...
+        end
+        @conn = nil
+      end
 
-    body = analyze_comment.to_json
-    headers = {
-      'Accept' => '*/*',
-      'Content-Length' => body.bytesize,
-      'Content-Type' => 'application/json',
-      'User-Agent' => "Discourse/#{Discourse::VERSION::STRING}",
-    }
-    begin
-      @conn.request(method: :post, path: ANALYZE_COMMENT_ENDPOINT, query: { key: SiteSetting.etiquette_google_api_key }, headers: headers, body: body)
-    rescue => e
-      raise NetworkError, "Excon had some problems with Google's Perspective API. #{e}"
+      if !@conn
+        @conn_created = Time.zone.now
+        @conn = Excon.new(GOOGLE_API_DOMAIN, self.proxy_request_options)
+      end
+
+      body = analyze_comment.to_json
+      headers = {
+        'Accept' => '*/*',
+        'Content-Length' => body.bytesize,
+        'Content-Type' => 'application/json',
+        'User-Agent' => "Discourse/#{Discourse::VERSION::STRING}",
+      }
+      begin
+        response = @conn.request(method: :post, path: ANALYZE_COMMENT_ENDPOINT, query: { key: SiteSetting.etiquette_google_api_key }, headers: headers, body: body)
+        self.extract_value_from_analyze_comment_response(response.body)
+      rescue => e
+        begin
+          @conn.reset
+        rescue
+          # not much we can do here
+        end
+        # get rid of bad connection
+        @conn = nil
+        raise NetworkError, "Excon had some problems with Google's Perspective API. #{e}"
+      end
     end
   end
 
