@@ -1,8 +1,8 @@
 # name: discourse-etiquette
 # about: Mark uncivil posts by Google's Perspective API
-# version: 1.1
+# version: 1.2
 # authors: Erick Guan
-# url: https://github.com/fantasticfears/discourse-etiquette
+# url: https://github.com/discourse/discourse-etiquette
 
 enabled_site_setting :etiquette_enabled
 
