@@ -2,9 +2,13 @@ plugins:
   etiquette_enabled:
     default: true
     client: true
-  etiquette_flag_post_min_toxicity_confidence:
+  etiquette_notify_posting_min_toxicity_enable:
+    default: false
+    client: true
+  etiquette_flag_post_min_toxicity_enable: true
+  etiquette_flag_post_min_toxicity:
     default: 0.9
-  etiquette_notify_posting_min_toxicity_confidence:
+  etiquette_notify_posting_min_toxicity:
     default: 0.85
   etiquette_toxicity_model:
     default: 'standard'

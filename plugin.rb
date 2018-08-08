@@ -1,8 +1,8 @@
 # name: discourse-etiquette
 # about: Mark uncivil posts by Google's Perspective API
-# version: 1.1
+# version: 1.2
 # authors: Erick Guan
-# url: https://github.com/fantasticfears/discourse-etiquette
+# url: https://github.com/discourse/discourse-etiquette
 
 enabled_site_setting :etiquette_enabled
 
@@ -17,7 +17,7 @@ after_initialize do
   load File.expand_path('../jobs/inspect_toxic_post.rb', __FILE__)
 
   on(:post_created) do |post, params|
-    if DiscourseEtiquette.should_check_post?(post)
+    if SiteSetting.etiquette_flag_post_min_toxicity_enable? && DiscourseEtiquette.should_check_post?(post)
       Jobs.enqueue(:flag_toxic_post, post_id: post.id)
     end
   end

@@ -68,7 +68,7 @@ module DiscourseEtiquette
   end
 
   def self.flag_on_scores(score, post)
-    if score[:score] > SiteSetting.etiquette_flag_post_min_toxicity_confidence
+    if score[:score] > SiteSetting.etiquette_flag_post_min_toxicity
       PostAction.act(
         Discourse.system_user,
         post,
@@ -104,7 +104,7 @@ module DiscourseEtiquette
   def self.check_content_toxicity(content, user_id)
     post = RawContent.new(content, user_id)
     score = self.score_comment(post)
-    if score[:score] > SiteSetting.etiquette_notify_posting_min_toxicity_confidence
+    if score[:score] > SiteSetting.etiquette_notify_posting_min_toxicity
       score
     end
   end
