@@ -45,10 +45,6 @@ module Jobs
         end
       end
       store.set(FAILED_POST_ID_KEY, failed_post_ids[batch_size..-1].to_a)
-
-      DiscourseEtiquette.unstub(:should_check_post?)
-      DiscourseEtiquette.unstub(:backfill_post_etiquette_check)
-
       return batch_size - queued_post.size
     end
 
