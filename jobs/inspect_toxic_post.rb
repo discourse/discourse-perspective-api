@@ -54,7 +54,7 @@ module Jobs
       checked = Set.new
       last_checked_post_id = store.get(LAST_CHECKED_POST_ID_KEY)&.to_i || 0
       last_id = last_checked_post_id
-      Post.with_deleted.order(id: :asc).includes(:topic).offset(last_checked_post_id).limit(batch_size).find_each do |p|
+      Post.with_deleted.includes(:topic).offset(last_checked_post_id).limit(batch_size).find_each do |p|
         queued.add(p.id)
         last_id = p.id
         if DiscourseEtiquette.should_check_post?(p)
