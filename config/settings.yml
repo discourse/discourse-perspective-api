@@ -20,6 +20,7 @@ plugins:
     default: ''
   etiquette_check_private_message:
     default: false
+  etiquette_check_secured_categories: false
   etiquette_backfill_posts:
     client: true
     default: false

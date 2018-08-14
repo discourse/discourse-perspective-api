@@ -59,6 +59,9 @@ describe DiscourseEtiquette do
   let(:private_message) { Fabricate(:private_message_post) }
   describe '.should_check_post?' do
     let(:system_message) { Fabricate(:post, user_id: -1) }
+    let(:secured_post) { Fabricate(:post) }
+    let(:private_category) { Fabricate(:private_category, group: Group.where(name: 'everyone').first) }
+
     it 'do not check when plugin is not enabled' do
       SiteSetting.etiquette_enabled = false
       expect(DiscourseEtiquette.should_check_post?(post)).to be_falsey
@@ -85,6 +88,15 @@ describe DiscourseEtiquette do
     it 'skips url post' do
       post.raw = 'https://www.google.com'
       expect(DiscourseEtiquette.should_check_post?(post)).to be_falsey
+    end
+
+    it 'skips when in secured category' do
+      secured_post.topic.category = private_category
+      secured_post.save!
+      SiteSetting.etiquette_check_secured_categories = false
+      expect(DiscourseEtiquette.should_check_post?(secured_post)).to be_falsey
+      SiteSetting.etiquette_check_secured_categories = true
+      expect(DiscourseEtiquette.should_check_post?(secured_post)).to be_truthy
     end
   end
 
