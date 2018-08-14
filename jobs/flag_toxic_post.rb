@@ -5,8 +5,8 @@ module Jobs
 
       return unless SiteSetting.etiquette_enabled? && SiteSetting.etiquette_flag_post_min_toxicity_enable?
 
-      post = Post.with_deleted.where(id: args[:post_id]).first
-      return unless post.present?
+      post = Post.where(id: args[:post_id]).first
+      return unless post.present? && !post.trashed?
 
       DiscourseEtiquette.check_post_toxicity(post)
     end

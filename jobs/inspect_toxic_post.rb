@@ -31,7 +31,7 @@ module Jobs
       queued_post = failed_post_ids[0...batch_size]
       unless queued_post.empty?
         queued_post.each do |post_id|
-          post = Post.with_deleted.includes(:topic).find_by(id: post_id)
+          post = Post.includes(:topic).find_by(id: post_id)
           next unless post
 
           if DiscourseEtiquette.should_check_post?(post)
@@ -54,7 +54,7 @@ module Jobs
       checked = Set.new
       last_checked_post_id = store.get(LAST_CHECKED_POST_ID_KEY)&.to_i || 0
       last_id = last_checked_post_id
-      Post.with_deleted.includes(:topic).offset(last_checked_post_id).limit(batch_size).find_each do |p|
+      Post.includes(:topic).offset(last_checked_post_id).limit(batch_size).find_each do |p|
         queued.add(p.id)
         last_id = p.id
         if DiscourseEtiquette.should_check_post?(p)
