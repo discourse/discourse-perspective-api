@@ -26,9 +26,10 @@ function initialize(api) {
         return;
       }
 
-      const checkBypassed = (!siteSettings.etiquette_check_private_message && this.get('topic.isPrivateMessage')) || (
-        !siteSettings.etiquette_check_secured_categories && this.get('model.category.read_restricted'));
-      if (!this.get('_etiquette_checked') && !checkBypassed) {
+      const bypassPM = !siteSettings.etiquette_check_private_message && this.get("topic.isPrivateMessage");
+      const bypassSecuredCategories = !siteSettings.etiquette_check_secured_categories && this.get("model.category.read_restricted");
+      const bypassCheck = bypassPM || bypassSecuredCategories;
+      if (!bypassCheck && !this.get('_etiquette_checked')) {
         var concat = '';
         ['title', 'raw', 'reply'].forEach((item, _) => {
           const content = composer.get(item);
