@@ -2,6 +2,8 @@ import { withPluginApi } from 'discourse/lib/plugin-api';
 import { ajax } from 'discourse/lib/ajax';
 
 function initialize(api) {
+  const siteSettings = api.container.lookup('site-settings:main');
+
   api.modifyClass('controller:composer', {
     _etiquette_checked: null,
 
@@ -24,7 +26,9 @@ function initialize(api) {
         return;
       }
 
-      if (!this.get('_etiquette_checked')) {
+      const checkBypassed = (!siteSettings.etiquette_check_private_message && this.get('topic.isPrivateMessage')) || (
+        !siteSettings.etiquette_check_secured_categories && this.get('model.category.read_restricted'));
+      if (!this.get('_etiquette_checked') && !checkBypassed) {
         var concat = '';
         ['title', 'raw', 'reply'].forEach((item, _) => {
           const content = composer.get(item);
