@@ -61,6 +61,8 @@ describe DiscourseEtiquette do
     let(:system_message) { Fabricate(:post, user_id: -1) }
     let(:secured_post) { Fabricate(:post) }
     let(:private_category) { Fabricate(:private_category, group: Group.where(name: 'everyone').first) }
+    let(:deleted_topic) { Fabricate(:deleted_topic) }
+    let(:post_in_deleted_topic) { Fabricate(:post, topic: deleted_topic) }
 
     it 'do not check when plugin is not enabled' do
       SiteSetting.etiquette_enabled = false
@@ -97,6 +99,10 @@ describe DiscourseEtiquette do
       expect(DiscourseEtiquette.should_check_post?(secured_post)).to be_falsey
       SiteSetting.etiquette_check_secured_categories = true
       expect(DiscourseEtiquette.should_check_post?(secured_post)).to be_truthy
+    end
+
+    it 'ignores posts in trashed topic' do
+      expect(DiscourseEtiquette.should_check_post?(post_in_deleted_topic)).to be_falsey
     end
   end
 
