@@ -8,6 +8,10 @@ API_RESPONSE_SEVERE_TOXICITY_BODY = '{"attributeScores": {"TOXICITY": {"spanScor
 API_RESPONSE_HIGH_SEVERE_TOXICITY_BODY = '{"attributeScores": {"TOXICITY": {"spanScores": [{"begin": 0,"end": 11,"score": {"value": 0.915122943,"type": "PROBABILITY"}}],"summaryScore": {"value": 0.915122943,"type": "PROBABILITY"}}},"languages": ["en"]}'
 
 describe DiscourseEtiquette do
+  before do
+    SiteSetting.etiquette_enabled = true
+  end
+
   let(:post) { Fabricate(:post) }
 
   describe 'AnalyzeComment' do
@@ -84,6 +88,8 @@ describe DiscourseEtiquette do
     end
 
     it 'skips system message' do
+      # TODO weird fabricator should be fixed
+      system_message.user_id = -1
       expect(DiscourseEtiquette.should_check_post?(system_message)).to be_falsey
     end
 
@@ -138,12 +144,12 @@ describe DiscourseEtiquette do
       end
 
       it '.check_post_toxicity returns the score' do
-        expect(DiscourseEtiquette.check_post_toxicity(post)).to eq({ score: 0.015122943 })
+        expect(DiscourseEtiquette.check_post_toxicity(post)).to eq(score: 0.015122943)
       end
 
       it '.check_content_toxicity returns the score if over the threshold' do
         stub_request(:post, API_ENDPOINT).to_return(status: 200, body: API_RESPONSE_HIGH_TOXICITY_BODY, headers: {})
-        expect(DiscourseEtiquette.check_content_toxicity(content, user.id)).to eq({ score: 0.915122943 })
+        expect(DiscourseEtiquette.check_content_toxicity(content, user.id)).to eq(score: 0.915122943)
       end
 
       it '.check_content_toxicity returns if below the threshold' do
@@ -163,12 +169,12 @@ describe DiscourseEtiquette do
       end
 
       it '.check_post_toxicity returns the score' do
-        expect(DiscourseEtiquette.check_post_toxicity(post)).to eq({ score: 0.0053346273 })
+        expect(DiscourseEtiquette.check_post_toxicity(post)).to eq(score: 0.0053346273)
       end
 
       it '.check_content_toxicity returns the score if over the threshold' do
         stub_request(:post, API_ENDPOINT).to_return(status: 200, body: API_RESPONSE_HIGH_SEVERE_TOXICITY_BODY, headers: {})
-        expect(DiscourseEtiquette.check_content_toxicity(content, user.id)).to eq({ score: 0.915122943 })
+        expect(DiscourseEtiquette.check_content_toxicity(content, user.id)).to eq(score: 0.915122943)
       end
 
       it '.check_content_toxicity returns if below the threshold' do

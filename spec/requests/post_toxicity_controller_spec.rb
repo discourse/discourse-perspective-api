@@ -1,10 +1,19 @@
 require 'rails_helper'
 
 describe ::Etiquette::PostToxicityController do
+
+  before do
+    SiteSetting.etiquette_enabled = true
+  end
+
   let(:api_endpoint) { "https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze?key=" }
   let(:api_response_toxicity_body) { '{"attributeScores": {"TOXICITY": {"spanScores": [{"begin": 0,"end": 11,"score": {"value": 0.015122943,"type": "PROBABILITY"}}],"summaryScore": {"value": 0.015122943,"type": "PROBABILITY"}}},"languages": ["en"]}' }
   let(:api_response_high_toxicity_body) { '{"attributeScores": {"TOXICITY": {"spanScores": [{"begin": 0,"end": 11,"score": {"value": 0.915122943,"type": "PROBABILITY"}}],"summaryScore": {"value": 0.915122943,"type": "PROBABILITY"}}},"languages": ["en"]}' }
-  let(:headers) { {"ACCEPT" => "applicaiton/json", "HTTP_ACCEPT" => "application/json"} }
+
+  let(:headers) do
+    { "ACCEPT" => "applicaiton/json", "HTTP_ACCEPT" => "application/json" }
+  end
+
   let(:post) { Fabricate(:post, user: log_in) }
 
   describe '.show' do
