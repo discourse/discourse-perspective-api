@@ -1,7 +1,7 @@
-module DiscourseEtiquette
+module DiscoursePerspective
   ANALYZE_COMMENT_ENDPOINT = '/v1alpha1/comments:analyze'
   GOOGLE_API_DOMAIN = 'https://commentanalyzer.googleapis.com'
-  POST_ANALYSIS_FIELD_PREFIX = 'post_etiquette'
+  POST_ANALYSIS_FIELD_PREFIX = 'post_perspective'
 
   class NetworkError < StandardError; end
 
@@ -27,7 +27,7 @@ module DiscourseEtiquette
         sessionId: "#{Discourse.base_url}_#{@user_id}"
       }
 
-      case SiteSetting.etiquette_toxicity_model
+      case SiteSetting.perspective_toxicity_model
       when 'standard'
         payload[:requestedAttributes] = { TOXICITY: { scoreType: 'PROBABILITY' } }
       when 'severe toxicity (experimental)'
@@ -68,18 +68,18 @@ module DiscourseEtiquette
   end
 
   def self.flag_on_scores(score, post)
-    if score[:score] > SiteSetting.etiquette_flag_post_min_toxicity
+    if score[:score] > SiteSetting.perspective_flag_post_min_toxicity
       PostAction.act(
         Discourse.system_user,
         post,
         PostActionType.types[:notify_moderators],
-        message: I18n.t('etiquette_flag_message')
+        message: I18n.t('perspective_flag_message')
       )
     end
   end
 
   def self.post_score_field_name
-    case SiteSetting.etiquette_toxicity_model
+    case SiteSetting.perspective_toxicity_model
     when 'standard'
       "#{POST_ANALYSIS_FIELD_PREFIX}_toxicity"
     when 'severe toxicity (experimental)'
@@ -87,7 +87,7 @@ module DiscourseEtiquette
     end
   end
 
-  def self.backfill_post_etiquette_check(post)
+  def self.backfill_post_perspective_check(post)
     score = self.score_comment(post)
     post.custom_fields[self.post_score_field_name] = score[:score].to_f
     post.save_custom_fields(true)
@@ -104,7 +104,7 @@ module DiscourseEtiquette
   def self.check_content_toxicity(content, user_id)
     post = RawContent.new(content, user_id)
     score = self.score_comment(post)
-    if score[:score] > SiteSetting.etiquette_notify_posting_min_toxicity
+    if score[:score] > SiteSetting.perspective_notify_posting_min_toxicity
       score
     end
   end
@@ -137,7 +137,7 @@ module DiscourseEtiquette
         'User-Agent' => "Discourse/#{Discourse::VERSION::STRING}",
       }
       begin
-        response = @conn.request(method: :post, path: ANALYZE_COMMENT_ENDPOINT, query: { key: SiteSetting.etiquette_google_api_key }, headers: headers, body: body)
+        response = @conn.request(method: :post, path: ANALYZE_COMMENT_ENDPOINT, query: { key: SiteSetting.perspective_google_api_key }, headers: headers, body: body)
         self.extract_value_from_analyze_comment_response(response.body)
       rescue => e
         begin
@@ -153,14 +153,14 @@ module DiscourseEtiquette
   end
 
   def self.should_check_post?(post)
-    return false if post.blank? || (!SiteSetting.etiquette_enabled?)
+    return false if post.blank? || (!SiteSetting.perspective_enabled?)
 
     # admin can choose whether to flag private messages. The message will be sent to moderators.
-    return false if !SiteSetting.etiquette_check_private_message && post&.topic&.private_message?
+    return false if !SiteSetting.perspective_check_private_message && post&.topic&.private_message?
     # system message bot message or no user
     return false if (post&.user_id).to_i <= 0
     # default not to check secured categories
-    return false if !SiteSetting.etiquette_check_secured_categories && post&.topic&.category&.read_restricted?
+    return false if !SiteSetting.perspective_check_secured_categories && post&.topic&.category&.read_restricted?
     # don't check trashed topics
     return false if post&.topic.trashed?
 

@@ -8,7 +8,7 @@ module Jobs
     FAILED_POST_ID_KEY = 'failed_post_ids'
 
     def store
-      @store ||= PluginStore.new('discourse-etiquette')
+      @store ||= PluginStore.new('discourse-perspective')
     end
 
     def set_last_checked_post_id(val)
@@ -18,7 +18,7 @@ module Jobs
     end
 
     def execute(args)
-      return unless SiteSetting.etiquette_enabled? && SiteSetting.etiquette_backfill_posts
+      return unless SiteSetting.perspective_enabled? && SiteSetting.perspective_backfill_posts
 
       batch_size = retry_failed_checks(BATCH_SIZE)
       check_posts(batch_size)
@@ -34,9 +34,9 @@ module Jobs
           post = Post.includes(:topic).find_by(id: post_id)
           next unless post
 
-          if DiscourseEtiquette.should_check_post?(post)
+          if DiscoursePerspective.should_check_post?(post)
             begin
-              DiscourseEtiquette.backfill_post_etiquette_check(post)
+              DiscoursePerspective.backfill_post_perspective_check(post)
             rescue => error
               Rails.logger.warn(error)
               next
@@ -57,9 +57,9 @@ module Jobs
       Post.includes(:topic).offset(last_checked_post_id).limit(batch_size).find_each do |p|
         queued.add(p.id)
         last_id = p.id
-        if DiscourseEtiquette.should_check_post?(p)
+        if DiscoursePerspective.should_check_post?(p)
           begin
-            DiscourseEtiquette.backfill_post_etiquette_check(p)
+            DiscoursePerspective.backfill_post_perspective_check(p)
             checked.add(p.id)
           rescue => error
             Rails.logger.info(error)
@@ -81,7 +81,7 @@ module Jobs
     def can_start_next_iteration?(last_id)
       last_checked_post_timestamp = store.get(LAST_CHECKED_TIME_KEY)&.to_datetime || 100.years.ago
       last_post_id = Post.order(id: :asc).pluck(:id).last || 1
-      DateTime.now >= last_checked_post_timestamp + SiteSetting.etiquette_historical_inspection_period &&
+      DateTime.now >= last_checked_post_timestamp + SiteSetting.perspective_historical_inspection_period &&
         last_id >= last_post_id
     end
 
