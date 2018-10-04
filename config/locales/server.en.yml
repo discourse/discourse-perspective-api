@@ -1,14 +1,14 @@
 en:
   site_settings:
-    etiquette_enabled: 'Enable Discourse Etiquette plugin for filtering toxic post.'
-    etiquette_notify_posting_min_toxicity_enable: "Check possible toxic content while user is trying to publish it."
-    etiquette_flag_post_min_toxicity_enable: "Flag possible toxic post and send messages to moderators."
-    etiquette_flag_post_min_toxicity: "The confidence level of post toxicity. The default value is reasonably high. Change it until you understand Google's Perspective API."
-    etiquette_notify_posting_min_toxicity: "The confidence level of post toxicity. Show a notification in the editor when user types something hurtful."
-    etiquette_toxicity_model: "Choose toxicity model to check content. Used for Google's Perspective API."
-    etiquette_google_api_key: "Google API key for Perspective API."
-    etiquette_check_private_message: "Check and flag private message if toxic (Noted that the message will be sent to moderators). Also applies to backfill mode."
-    etiquette_check_secured_categories: "Check categories not visible to the public."
-    etiquette_backfill_posts: "Query with existing posts and record results in post custom fields; This mode disables online checking for posts."
-    etiquette_historical_inspection_period: "The period in days to start a new query iteration after finishingg last iteration. Used only if `etiquette_backfill_posts` is enabled"
-  etiquette_flag_message: "Highly likely a toxic post."
+    perspective_enabled: 'Enable Discourse Perspective plugin for filtering toxic posts.'
+    perspective_notify_posting_min_toxicity_enable: "Check possible toxic content while a user is trying to publish it."
+    perspective_flag_post_min_toxicity_enable: "Flag possible toxic posts and send messages to notify moderators."
+    perspective_flag_post_min_toxicity: "The confidence level of post toxicity. The default value is reasonably high. Change it until you understand Google's Perspective API."
+    perspective_notify_posting_min_toxicity: "The confidence level of post toxicity. Show a notification in the editor when user types something hurtful."
+    perspective_toxicity_model: "Choose toxicity model for Google's Perspective API."
+    perspective_google_api_key: "Google API key for Perspective API."
+    perspective_check_private_message: "Check and flag private message if toxic (Note: The message content will be sent to moderators). Also applies to backfill mode."
+    perspective_check_secured_categories: "Check categories not visible to the public."
+    perspective_backfill_posts: "Query with existing posts and record results in post custom fields; This mode disables online checking for posts."
+    perspective_historical_inspection_period: "The period in days to start a new query iteration after finishing last iteration. Used only if `perspective_backfill_posts` is enabled"
+  perspective_flag_message: "Highly likely a toxic post."

@@ -15,14 +15,14 @@ describe Jobs::FlagToxicPost do
       let(:post) { Fabricate(:post) }
 
       it 'returns when the plugin it not enabled' do
-        SiteSetting.etiquette_enabled = false
-        SiteSetting.etiquette_flag_post_min_toxicity_enable = true
+        SiteSetting.perspective_enabled = false
+        SiteSetting.perspective_flag_post_min_toxicity_enable = true
         expect(subject.execute(post_id: post.id)).to eq nil
       end
 
       it 'returns when the flag is not enabled' do
-        SiteSetting.etiquette_enabled = true
-        SiteSetting.etiquette_flag_post_min_toxicity_enable = false
+        SiteSetting.perspective_enabled = true
+        SiteSetting.perspective_flag_post_min_toxicity_enable = false
         expect(subject.execute(post_id: post.id)).to eq nil
       end
     end

@@ -1,32 +1,32 @@
-# name: discourse-etiquette
-# about: Mark uncivil posts by Google's Perspective API
+# name: discourse-perspective
+# about: Mark uncivil posts using Google's Perspective API
 # version: 1.2
 # authors: Erick Guan
-# url: https://github.com/discourse/discourse-etiquette
+# url: https://github.com/discourse/discourse-perspective-api
 
-enabled_site_setting :etiquette_enabled
+enabled_site_setting :perspective_enabled
 
 require 'excon'
 
-load File.expand_path('../lib/discourse_etiquette.rb', __FILE__)
+load File.expand_path('../lib/discourse_perspective.rb', __FILE__)
 
-PLUGIN_NAME ||= "discourse-etiquette".freeze
+PLUGIN_NAME ||= "discourse-perspective-api".freeze
 
 after_initialize do
   load File.expand_path('../jobs/flag_toxic_post.rb', __FILE__)
   load File.expand_path('../jobs/inspect_toxic_post.rb', __FILE__)
 
   on(:post_created) do |post, params|
-    if SiteSetting.etiquette_flag_post_min_toxicity_enable? && DiscourseEtiquette.should_check_post?(post)
+    if SiteSetting.perspective_flag_post_min_toxicity_enable? && DiscoursePerspective.should_check_post?(post)
       Jobs.enqueue(:flag_toxic_post, post_id: post.id)
     end
   end
 
-  register_post_custom_field_type(DiscourseEtiquette.post_score_field_name, :float)
+  register_post_custom_field_type(DiscoursePerspective.post_score_field_name, :float)
 
   require_dependency "application_controller"
 
-  module ::Etiquette
+  module ::Perspective
     class PostToxicityController < ::ApplicationController
       requires_plugin PLUGIN_NAME
 
@@ -53,22 +53,22 @@ after_initialize do
       private
 
       def check_content(content)
-        content&.present? && DiscourseEtiquette.check_content_toxicity(content, current_user)
+        content&.present? && DiscoursePerspective.check_content_toxicity(content, current_user)
       end
     end
 
     class Engine < ::Rails::Engine
       engine_name PLUGIN_NAME
-      isolate_namespace Etiquette
+      isolate_namespace Perspective
     end
   end
 
-  Etiquette::Engine.routes.draw do
+  Perspective::Engine.routes.draw do
     get 'post_toxicity' => 'post_toxicity#show'
   end
 
   Discourse::Application.routes.append do
-    mount ::Etiquette::Engine, at: '/etiquette'
+    mount ::Perspective::Engine, at: '/perspective'
   end
 
 end

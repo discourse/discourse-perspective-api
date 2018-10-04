@@ -7,35 +7,35 @@ API_RESPONSE_HIGH_TOXICITY_BODY = '{"attributeScores": {"TOXICITY": {"spanScores
 API_RESPONSE_SEVERE_TOXICITY_BODY = '{"attributeScores": {"TOXICITY": {"spanScores": [{"begin": 0,"end": 11,"score": {"value": 0.0053346273,"type": "PROBABILITY"}}],"summaryScore": {"value": 0.0053346273,"type": "PROBABILITY"}}},"languages": ["en"]}'
 API_RESPONSE_HIGH_SEVERE_TOXICITY_BODY = '{"attributeScores": {"TOXICITY": {"spanScores": [{"begin": 0,"end": 11,"score": {"value": 0.915122943,"type": "PROBABILITY"}}],"summaryScore": {"value": 0.915122943,"type": "PROBABILITY"}}},"languages": ["en"]}'
 
-describe DiscourseEtiquette do
+describe DiscoursePerspective do
   before do
-    SiteSetting.etiquette_enabled = true
+    SiteSetting.perspective_enabled = true
   end
 
   let(:post) { Fabricate(:post) }
 
   describe 'AnalyzeComment' do
-    let(:json) { MultiJson.load(DiscourseEtiquette::AnalyzeComment.new(post, post.user_id).to_json).deep_symbolize_keys }
+    let(:json) { MultiJson.load(DiscoursePerspective::AnalyzeComment.new(post, post.user_id).to_json).deep_symbolize_keys }
 
     it 'generates json' do
       expect(json[:comment][:text].blank?).to be_falsey
       expect(json[:requestedAttributes][:TOXICITY][:scoreType].blank?).to be_falsey
     end
 
-    it 'standard etiquette_toxicity_model' do
-      SiteSetting.etiquette_toxicity_model = 'standard'
+    it 'standard perspective_toxicity_model' do
+      SiteSetting.perspective_toxicity_model = 'standard'
       expect(json[:requestedAttributes][:TOXICITY][:scoreType]).to eq 'PROBABILITY'
     end
 
-    it 'severe toxicity etiquette_toxicity_model' do
-      SiteSetting.etiquette_toxicity_model = 'severe toxicity (experimental)'
+    it 'severe toxicity perspective_toxicity_model' do
+      SiteSetting.perspective_toxicity_model = 'severe toxicity (experimental)'
       expect(json[:requestedAttributes][:SEVERE_TOXICITY][:scoreType]).to eq 'PROBABILITY'
     end
   end
 
   describe ".unload_json" do
     it 'returns an empty dict at least' do
-      expect(DiscourseEtiquette.unload_json('')).to eq({})
+      expect(DiscoursePerspective.unload_json('')).to eq({})
     end
   end
 
@@ -45,17 +45,17 @@ describe DiscourseEtiquette do
     let(:blank) { '' }
 
     it 'returns toxicity score' do
-      response = DiscourseEtiquette.extract_value_from_analyze_comment_response(toxicity_response)
+      response = DiscoursePerspective.extract_value_from_analyze_comment_response(toxicity_response)
       expect(response[:score]).to be 0.026585817
     end
 
     it 'returns severe toxicity score' do
-      response = DiscourseEtiquette.extract_value_from_analyze_comment_response(severe_toxicity_response)
+      response = DiscoursePerspective.extract_value_from_analyze_comment_response(severe_toxicity_response)
       expect(response[:score]).to be 0.0039000872
     end
 
     it 'recovers from attribuets' do
-      response = DiscourseEtiquette.extract_value_from_analyze_comment_response(blank)
+      response = DiscoursePerspective.extract_value_from_analyze_comment_response(blank)
       expect(response[:score]).to be 0.0
     end
   end
@@ -69,62 +69,62 @@ describe DiscourseEtiquette do
     let(:post_in_deleted_topic) { Fabricate(:post, topic: deleted_topic) }
 
     it 'do not check when plugin is not enabled' do
-      SiteSetting.etiquette_enabled = false
-      expect(DiscourseEtiquette.should_check_post?(post)).to be_falsey
-      SiteSetting.etiquette_enabled = true
-      expect(DiscourseEtiquette.should_check_post?(post)).to be_truthy
+      SiteSetting.perspective_enabled = false
+      expect(DiscoursePerspective.should_check_post?(post)).to be_falsey
+      SiteSetting.perspective_enabled = true
+      expect(DiscoursePerspective.should_check_post?(post)).to be_truthy
     end
 
     it 'do not check when post is blank' do
       post.raw = ''
-      expect(DiscourseEtiquette.should_check_post?(post)).to be_falsey
+      expect(DiscoursePerspective.should_check_post?(post)).to be_falsey
     end
 
     it 'checks private message when allowed' do
-      SiteSetting.etiquette_check_private_message = false
-      expect(DiscourseEtiquette.should_check_post?(private_message)).to be_falsey
-      SiteSetting.etiquette_check_private_message = true
-      expect(DiscourseEtiquette.should_check_post?(private_message)).to be_truthy
+      SiteSetting.perspective_check_private_message = false
+      expect(DiscoursePerspective.should_check_post?(private_message)).to be_falsey
+      SiteSetting.perspective_check_private_message = true
+      expect(DiscoursePerspective.should_check_post?(private_message)).to be_truthy
     end
 
     it 'skips system message' do
       # TODO weird fabricator should be fixed
       system_message.user_id = -1
-      expect(DiscourseEtiquette.should_check_post?(system_message)).to be_falsey
+      expect(DiscoursePerspective.should_check_post?(system_message)).to be_falsey
     end
 
     it 'skips url post' do
       post.raw = 'https://www.google.com'
-      expect(DiscourseEtiquette.should_check_post?(post)).to be_falsey
+      expect(DiscoursePerspective.should_check_post?(post)).to be_falsey
     end
 
     it 'skips when in secured category' do
       secured_post.topic.category = private_category
       secured_post.save!
-      SiteSetting.etiquette_check_secured_categories = false
-      expect(DiscourseEtiquette.should_check_post?(secured_post)).to be_falsey
-      SiteSetting.etiquette_check_secured_categories = true
-      expect(DiscourseEtiquette.should_check_post?(secured_post)).to be_truthy
+      SiteSetting.perspective_check_secured_categories = false
+      expect(DiscoursePerspective.should_check_post?(secured_post)).to be_falsey
+      SiteSetting.perspective_check_secured_categories = true
+      expect(DiscoursePerspective.should_check_post?(secured_post)).to be_truthy
     end
 
     it 'ignores posts in trashed topic' do
-      expect(DiscourseEtiquette.should_check_post?(post_in_deleted_topic)).to be_falsey
+      expect(DiscoursePerspective.should_check_post?(post_in_deleted_topic)).to be_falsey
     end
   end
 
   describe '.flag_on_scores' do
-    let(:zero_score) { DiscourseEtiquette.extract_value_from_analyze_comment_response(nil) }
+    let(:zero_score) { DiscoursePerspective.extract_value_from_analyze_comment_response(nil) }
     let(:score) { { score: 0.99 } }
     let(:post) { Fabricate(:post) }
 
     it 'acts if threshold exceeded' do
       PostAction.expects(:act).once
-      DiscourseEtiquette.flag_on_scores(score, post)
+      DiscoursePerspective.flag_on_scores(score, post)
     end
 
     it 'does nothing if score is low' do
       PostAction.expects(:act).never
-      DiscourseEtiquette.flag_on_scores(zero_score, post)
+      DiscoursePerspective.flag_on_scores(zero_score, post)
     end
   end
 
@@ -138,22 +138,22 @@ describe DiscourseEtiquette do
         stub_request(:post, API_ENDPOINT).to_return(status: 200, body: API_RESPONSE_TOXICITY_BODY, headers: {})
       end
 
-      it '.backfill_post_etiquette_check saves to the post_etiquette_toxicity custom field' do
-        DiscourseEtiquette.backfill_post_etiquette_check(post)
-        expect(post.custom_fields['post_etiquette_toxicity']).to eq "0.015122943"
+      it '.backfill_post_perspective_check saves to the post_perspective_toxicity custom field' do
+        DiscoursePerspective.backfill_post_perspective_check(post)
+        expect(post.custom_fields['post_perspective_toxicity']).to eq "0.015122943"
       end
 
       it '.check_post_toxicity returns the score' do
-        expect(DiscourseEtiquette.check_post_toxicity(post)).to eq(score: 0.015122943)
+        expect(DiscoursePerspective.check_post_toxicity(post)).to eq(score: 0.015122943)
       end
 
       it '.check_content_toxicity returns the score if over the threshold' do
         stub_request(:post, API_ENDPOINT).to_return(status: 200, body: API_RESPONSE_HIGH_TOXICITY_BODY, headers: {})
-        expect(DiscourseEtiquette.check_content_toxicity(content, user.id)).to eq(score: 0.915122943)
+        expect(DiscoursePerspective.check_content_toxicity(content, user.id)).to eq(score: 0.915122943)
       end
 
       it '.check_content_toxicity returns if below the threshold' do
-        expect(DiscourseEtiquette.check_content_toxicity(content, user.id)).to eq nil
+        expect(DiscoursePerspective.check_content_toxicity(content, user.id)).to eq nil
       end
     end
 
@@ -162,23 +162,23 @@ describe DiscourseEtiquette do
         stub_request(:post, API_ENDPOINT).to_return(status: 200, body: API_RESPONSE_SEVERE_TOXICITY_BODY, headers: {})
       end
 
-      it 'backfill_post_etiquette_check saves to the post_etiquette_severe_toxicity custom field' do
-        SiteSetting.etiquette_toxicity_model = 'severe toxicity (experimental)'
-        DiscourseEtiquette.backfill_post_etiquette_check(post)
-        expect(post.custom_fields['post_etiquette_severe_toxicity']).to eq "0.0053346273"
+      it 'backfill_post_perspective_check saves to the post_perspective_severe_toxicity custom field' do
+        SiteSetting.perspective_toxicity_model = 'severe toxicity (experimental)'
+        DiscoursePerspective.backfill_post_perspective_check(post)
+        expect(post.custom_fields['post_perspective_severe_toxicity']).to eq "0.0053346273"
       end
 
       it '.check_post_toxicity returns the score' do
-        expect(DiscourseEtiquette.check_post_toxicity(post)).to eq(score: 0.0053346273)
+        expect(DiscoursePerspective.check_post_toxicity(post)).to eq(score: 0.0053346273)
       end
 
       it '.check_content_toxicity returns the score if over the threshold' do
         stub_request(:post, API_ENDPOINT).to_return(status: 200, body: API_RESPONSE_HIGH_SEVERE_TOXICITY_BODY, headers: {})
-        expect(DiscourseEtiquette.check_content_toxicity(content, user.id)).to eq(score: 0.915122943)
+        expect(DiscoursePerspective.check_content_toxicity(content, user.id)).to eq(score: 0.915122943)
       end
 
       it '.check_content_toxicity returns if below the threshold' do
-        expect(DiscourseEtiquette.check_content_toxicity(content, user.id)).to eq nil
+        expect(DiscoursePerspective.check_content_toxicity(content, user.id)).to eq nil
       end
     end
   end

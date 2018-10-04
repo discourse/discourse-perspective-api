@@ -1,9 +1,9 @@
 import { acceptance } from "helpers/qunit-helpers";
 
-acceptance('Discourse Etiquette', {
+acceptance('Discourse Perspective', {
   loggedIn: true,
   settings: {
-    etiquette_notify_posting_min_toxicity_enable: true
+    perspective_notify_posting_min_toxicity_enable: true
   }
 });
 

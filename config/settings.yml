@@ -1,32 +1,32 @@
 plugins:
-  etiquette_enabled:
+  perspective_enabled:
     default: false
     client: true
-  etiquette_notify_posting_min_toxicity_enable:
+  perspective_notify_posting_min_toxicity_enable:
     default: false
     client: true
-  etiquette_flag_post_min_toxicity_enable: true
-  etiquette_flag_post_min_toxicity:
+  perspective_flag_post_min_toxicity_enable: true
+  perspective_flag_post_min_toxicity:
     default: 0.9
-  etiquette_notify_posting_min_toxicity:
+  perspective_notify_posting_min_toxicity:
     default: 0.85
-  etiquette_toxicity_model:
+  perspective_toxicity_model:
     default: 'standard'
     type: enum
     choices:
       - standard
       - severe toxicity (experimental)
-  etiquette_google_api_key:
+  perspective_google_api_key:
     default: ''
-  etiquette_check_private_message:
+  perspective_check_private_message:
     default: false
     client: true
-  etiquette_check_secured_categories:
+  perspective_check_secured_categories:
     default: false
     client: true
-  etiquette_backfill_posts:
+  perspective_backfill_posts:
     client: true
     default: false
-  etiquette_historical_inspection_period:
+  perspective_historical_inspection_period:
     default: 300
 
