@@ -66,7 +66,7 @@ function initialize(api) {
 }
 
 export default {
-  name: 'discourse-perspective',
+  name: 'discourse-perspective-api',
 
   initialize(container) {
     const siteSettings = container.lookup('site-settings:main');
