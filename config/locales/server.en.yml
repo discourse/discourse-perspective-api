@@ -1,14 +1,14 @@
 en:
   site_settings:
-    perspective_enabled: 'Enable Discourse Perspective plugin for filtering toxic posts.'
-    perspective_notify_posting_min_toxicity_enable: "Check possible toxic content while a user is trying to publish it."
-    perspective_flag_post_min_toxicity_enable: "Flag possible toxic posts and send messages to notify moderators."
-    perspective_flag_post_min_toxicity: "The confidence level of post toxicity. The default value is reasonably high. Change it until you understand Google's Perspective API."
-    perspective_notify_posting_min_toxicity: "The confidence level of post toxicity. Show a notification in the editor when user types something hurtful."
+    perspective_enabled: 'Enable the Discourse Perspective plugin for filtering toxic posts.'
+    perspective_notify_posting_min_toxicity_enable: "Check possible toxic content while a user is trying to submit it."
+    perspective_flag_post_min_toxicity_enable: "Flag possible toxic posts and send messages to notify moderators and admins."
+    perspective_flag_post_min_toxicity: "The confidence level of post toxicity between 0 and 1. The default value is reasonably high. Read the Perspective API docs to see how scores are calculated."
+    perspective_notify_posting_min_toxicity: "The confidence level of post toxicity between 0 and 1. Show a notification in the composer when user types something hurtful."
     perspective_toxicity_model: "Choose toxicity model for Google's Perspective API."
-    perspective_google_api_key: "Google API key for Perspective API."
-    perspective_check_private_message: "Check and flag private message if toxic (Note: The message content will be sent to moderators). Also applies to backfill mode."
-    perspective_check_secured_categories: "Check categories not visible to the public."
-    perspective_backfill_posts: "Query with existing posts and record results in post custom fields; This mode disables online checking for posts."
+    perspective_google_api_key: "Google API key for Perspective API. Get one from: https://perspectiveapi.com/"
+    perspective_check_private_message: "Check and flag private messages if toxic. (Note: The message content will be sent to moderators). Also applies to backfill mode."
+    perspective_check_secured_categories: "Check private categories for potentially toxic posts."
+    perspective_backfill_posts: "Query the toxicity of existing posts and record the results in post custom fields; This mode disables live checking for posts."
     perspective_historical_inspection_period: "The period in days to start a new query iteration after finishing last iteration. Used only if `perspective_backfill_posts` is enabled"
   perspective_flag_message: "Highly likely a toxic post."
