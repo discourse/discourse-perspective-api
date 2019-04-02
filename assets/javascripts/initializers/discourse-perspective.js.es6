@@ -42,7 +42,7 @@ function initialize(api) {
           }
         });
         concat.trim();
-        ajax(`/perspective/post_toxicity?concat=${concat}`)
+        ajax(`/perspective/post_toxicity?concat=${encodeURIComponent(concat)}`)
           .then(response => {
             if (response && response["score"] !== undefined) {
               const message = I18n.t("perspective.perspective_message");
