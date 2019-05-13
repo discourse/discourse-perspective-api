@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # name: discourse-perspective
 # about: Mark uncivil posts using Google's Perspective API
 # version: 1.2

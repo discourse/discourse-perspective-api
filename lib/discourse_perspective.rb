@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiscoursePerspective
   ANALYZE_COMMENT_ENDPOINT = '/v1alpha1/comments:analyze'
   GOOGLE_API_DOMAIN = 'https://commentanalyzer.googleapis.com'
