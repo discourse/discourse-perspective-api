@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class InspectToxicPost < Jobs::Scheduled
+  class InspectToxicPost < ::Jobs::Scheduled
     every 10.minutes
 
     BATCH_SIZE = 1000

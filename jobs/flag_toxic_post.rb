@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class FlagToxicPost < Jobs::Base
+  class FlagToxicPost < ::Jobs::Base
     def execute(args)
       raise Discourse::InvalidParameters.new(:post_id) unless args[:post_id].present?
 
