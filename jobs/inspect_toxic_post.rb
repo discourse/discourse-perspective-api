@@ -47,7 +47,7 @@ module Jobs
         end
       end
       store.set(FAILED_POST_ID_KEY, failed_post_ids[batch_size..-1].to_a)
-      return batch_size - queued_post.size
+      batch_size - queued_post.size
     end
 
     def check_posts(batch_size)
