@@ -24,7 +24,10 @@ QUnit.test("Create a toxic topic without api keys filled", async assert => {
   click("#create-topic");
 
   await fillIn("#reply-title", "this is a normal title");
-  await fillIn(".d-editor-input", "Fuck. This is outrageous and dumb. Go to hell.");
+  await fillIn(
+    ".d-editor-input",
+    "Fuck. This is outrageous and dumb. Go to hell."
+  );
 
   await click("#reply-control button.create");
 
