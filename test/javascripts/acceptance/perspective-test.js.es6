@@ -7,34 +7,26 @@ acceptance("Discourse Perspective", {
   }
 });
 
-test("Create a normal topic", assert => {
+QUnit.test("Create a normal topic", async assert => {
   visit("/");
   click("#create-topic");
 
-  fillIn("#reply-title", "this is a normal title");
-  fillIn(".d-editor-input", "hello world! This is a normal topic");
+  await fillIn("#reply-title", "this is a normal title");
+  await fillIn(".d-editor-input", "hello world! This is a normal topic");
 
-  andThen(() => {
-    click("#reply-control button.create");
-  });
+  await click("#reply-control button.create");
 
-  andThen(() => {
-    assert.ok(exists(".cooked"), "new topic created");
-  });
+  assert.ok(exists(".cooked"), "new topic created");
 });
 
-test("Create a toxic topic without api keys filled", assert => {
+QUnit.test("Create a toxic topic without api keys filled", async assert => {
   visit("/");
   click("#create-topic");
 
-  fillIn("#reply-title", "this is a normal title");
-  fillIn(".d-editor-input", "Fuck. This is outrageous and dumb. Go to hell.");
+  await fillIn("#reply-title", "this is a normal title");
+  await fillIn(".d-editor-input", "Fuck. This is outrageous and dumb. Go to hell.");
 
-  andThen(() => {
-    click("#reply-control button.create");
-  });
+  await click("#reply-control button.create");
 
-  andThen(() => {
-    assert.ok(exists(".cooked"), "new topic created");
-  });
+  assert.ok(exists(".cooked"), "new topic created");
 });
