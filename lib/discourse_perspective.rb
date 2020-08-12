@@ -14,11 +14,10 @@ module DiscoursePerspective
     end
 
     def to_json
-      # This is a hard limit from Google API. (3000 bytes)
-      # Truncate naively here. Some long posts are PM and from Discourse.
-      # https://github.com/conversationai/perspectiveapi/blob/master/api_reference.md#scoring-comments-analyzecomment
-      raw = @post.raw[0..3000]
-      while raw.bytesize > 3000
+      # This is a hard limit from Google API. (20000 bytes)
+      # https://github.com/conversationai/perspectiveapi/blob/master/2-api/limits.md#character-limit-for-requests
+      raw = @post.raw
+      while raw.bytesize > 20.kilobytes
         raw = raw[0..-5]
       end
       payload = {

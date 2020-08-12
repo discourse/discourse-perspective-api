@@ -1,5 +1,6 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { ajax } from "discourse/lib/ajax";
+import I18n from "I18n";
 
 function initialize(api) {
   const siteSettings = api.container.lookup("site-settings:main");
@@ -16,12 +17,15 @@ function initialize(api) {
 
     save(force) {
       // same validataion code from controller
-      if (this.get("disableSubmit")) return;
-      if (!this.get("showWarning")) {
+      if (this.disableSubmit && !this._perspective_checked) return;
+      if (!this.showWarning) {
         this.set("model.isWarning", false);
       }
-      const composer = this.get("model");
-      if (composer.get("cantSubmitPost")) {
+
+      // disable composer submit during perspective validation
+      this.set("disableSubmit", true);
+      const composer = this.model;
+      if (composer.cantSubmitPost) {
         this.set("lastValidatedAt", Date.now());
         return;
       }
@@ -33,7 +37,7 @@ function initialize(api) {
         !siteSettings.perspective_check_secured_categories &&
         this.get("model.category.read_restricted");
       const bypassCheck = bypassPM || bypassSecuredCategories;
-      if (!bypassCheck && !this.get("_perspective_checked")) {
+      if (!bypassCheck && !this._perspective_checked) {
         var concat = "";
         ["title", "raw", "reply"].forEach(item => {
           const content = composer.get(item);
@@ -42,7 +46,10 @@ function initialize(api) {
           }
         });
         concat.trim();
-        ajax(`/perspective/post_toxicity?concat=${encodeURIComponent(concat)}`)
+        ajax("/perspective/post_toxicity", {
+          type: "POST",
+          data: { concat: concat }
+        })
           .then(response => {
             if (response && response["score"] !== undefined) {
               const message = I18n.t("perspective.perspective_message");
@@ -55,7 +62,10 @@ function initialize(api) {
                 },
                 {
                   label: I18n.t("perspective.composer_edit"),
-                  class: "btn-primary"
+                  class: "btn-primary",
+                  callback: () => {
+                    this.set("disableSubmit", false);
+                  }
                 }
               ];
               bootbox.dialog(message, buttons);
@@ -69,6 +79,7 @@ function initialize(api) {
             this.perspectiveSave(force);
           });
       } else {
+        this.set("disableSubmit", false);
         return this._super(force);
       }
     }
