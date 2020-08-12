@@ -32,7 +32,7 @@ after_initialize do
     class PostToxicityController < ::ApplicationController
       requires_plugin PLUGIN_NAME
 
-      def show
+      def post_toxicity
         if current_user
           RateLimiter.new(current_user, "post-toxicity", 8, 1.minute).performed!
         else
@@ -66,7 +66,7 @@ after_initialize do
   end
 
   Perspective::Engine.routes.draw do
-    get 'post_toxicity' => 'post_toxicity#show'
+    post 'post_toxicity' => 'post_toxicity#post_toxicity'
   end
 
   Discourse::Application.routes.append do
