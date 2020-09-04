@@ -39,7 +39,7 @@ function initialize(api) {
       const bypassCheck = bypassPM || bypassSecuredCategories;
       if (!bypassCheck && !this._perspective_checked) {
         var concat = "";
-        ["title", "raw", "reply"].forEach(item => {
+        ["title", "raw", "reply"].forEach((item) => {
           const content = composer.get(item);
           if (content) {
             concat += `${content} `;
@@ -48,9 +48,9 @@ function initialize(api) {
         concat.trim();
         ajax("/perspective/post_toxicity", {
           type: "POST",
-          data: { concat: concat }
+          data: { concat: concat },
         })
-          .then(response => {
+          .then((response) => {
             if (response && response["score"] !== undefined) {
               const message = I18n.t("perspective.perspective_message");
 
@@ -58,15 +58,15 @@ function initialize(api) {
                 {
                   label: I18n.t("perspective.composer_continue"),
                   class: "btn",
-                  callback: () => this.perspectiveSave(force)
+                  callback: () => this.perspectiveSave(force),
                 },
                 {
                   label: I18n.t("perspective.composer_edit"),
                   class: "btn-primary",
                   callback: () => {
                     this.set("disableSubmit", false);
-                  }
-                }
+                  },
+                },
               ];
               bootbox.dialog(message, buttons);
               return;
@@ -82,7 +82,7 @@ function initialize(api) {
         this.set("disableSubmit", false);
         return this._super(force);
       }
-    }
+    },
   });
 }
 
@@ -97,5 +97,5 @@ export default {
     ) {
       withPluginApi("0.8.17", initialize);
     }
-  }
+  },
 };
