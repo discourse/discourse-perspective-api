@@ -3,11 +3,11 @@ import { acceptance } from "helpers/qunit-helpers";
 acceptance("Discourse Perspective", {
   loggedIn: true,
   settings: {
-    perspective_notify_posting_min_toxicity_enable: true
-  }
+    perspective_notify_posting_min_toxicity_enable: true,
+  },
 });
 
-QUnit.test("Create a normal topic", async assert => {
+QUnit.test("Create a normal topic", async (assert) => {
   visit("/");
   click("#create-topic");
 
@@ -19,7 +19,7 @@ QUnit.test("Create a normal topic", async assert => {
   assert.ok(exists(".cooked"), "new topic created");
 });
 
-QUnit.test("Create a toxic topic without api keys filled", async assert => {
+QUnit.test("Create a toxic topic without api keys filled", async (assert) => {
   visit("/");
   click("#create-topic");
 
