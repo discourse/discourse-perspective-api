@@ -22,12 +22,13 @@ function initialize(api) {
         this.set("model.isWarning", false);
       }
 
-      // disable composer submit during perspective validation
-      this.set("disableSubmit", true);
       const composer = this.model;
       if (composer.cantSubmitPost) {
         this.set("lastValidatedAt", Date.now());
         return;
+      } else {
+        // disable composer submit during perspective validation
+        this.set("disableSubmit", true);
       }
 
       const bypassPM =
@@ -37,15 +38,19 @@ function initialize(api) {
         !siteSettings.perspective_check_secured_categories &&
         this.get("model.category.read_restricted");
       const bypassCheck = bypassPM || bypassSecuredCategories;
+
       if (!bypassCheck && !this._perspective_checked) {
         var concat = "";
+
         ["title", "raw", "reply"].forEach((item) => {
           const content = composer.get(item);
           if (content) {
             concat += `${content} `;
           }
         });
+
         concat.trim();
+
         ajax("/perspective/post_toxicity", {
           type: "POST",
           data: { concat: concat },
