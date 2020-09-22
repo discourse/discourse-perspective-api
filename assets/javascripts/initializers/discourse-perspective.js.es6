@@ -17,7 +17,9 @@ function initialize(api) {
 
     save(force) {
       // same validataion code from controller
-      if (this.disableSubmit && !this._perspective_checked) return;
+      if (this.disableSubmit && !this._perspective_checked) {
+        return;
+      }
       if (!this.showWarning) {
         this.set("model.isWarning", false);
       }
