@@ -24,6 +24,12 @@ after_initialize do
     end
   end
 
+  on(:post_edited) do |post|
+    if SiteSetting.perspective_flag_post_min_toxicity_enable? && DiscoursePerspective.should_check_post?(post)
+      Jobs.enqueue(:flag_toxic_post, post_id: post.id)
+    end
+  end
+
   register_post_custom_field_type(DiscoursePerspective.post_score_field_name, :float)
 
   require_dependency "application_controller"
