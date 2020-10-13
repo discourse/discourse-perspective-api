@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# name: discourse-perspective
+# name: discourse-perspective-api
 # about: Mark uncivil posts using Google's Perspective API
 # version: 1.2
 # authors: Erick Guan

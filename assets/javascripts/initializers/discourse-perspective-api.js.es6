@@ -42,7 +42,7 @@ function initialize(api) {
       const bypassCheck = bypassPM || bypassSecuredCategories;
 
       if (!bypassCheck && !this._perspective_checked) {
-        let concat = "";
+        var concat = "";
 
         ["title", "raw", "reply"].forEach((item) => {
           const content = composer.get(item);
