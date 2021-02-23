@@ -1,4 +1,7 @@
 # Discourse Perspective plugin
+
+https://meta.discourse.org/t/google-perspective-api-plugin/98733
+
 This plugin flags toxic posts using Google's Perspective API.
 
 ## Installation
