@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 he:
+  js:
+    perspective:
+      perspective_message: "נראה שמה שתכננת לפרסם עשוי להיות חסר נימוס או מזלזל באחרים ויתכן שיסומן בדגל כדי שיסקרו אותו."
+      composer_edit: "לחזור ולערוך"
+      composer_continue: "להמשיך לפרסם"

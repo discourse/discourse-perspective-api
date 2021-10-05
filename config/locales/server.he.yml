@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 he:
+  site_settings:
+    perspective_enabled: 'הפעלת תוסף Perspective ל־Discourse תסנן פוסטים רעילים.'
+    perspective_notify_posting_min_toxicity_enable: "תוכן רעיל ייבדק בזמן ניסיון הגשתו על ידי המשתמש."
+    perspective_flag_post_min_toxicity_enable: "סימון פוסטים רעילים ושליחת הודעות בנושא למפקחים ולמנהלים."
+    perspective_toxicity_model: "בחירת מודל רעילות ל־Perspective API של Google."
+    perspective_google_api_key: "מפתח API של Google ל־API של Perspective. ניתן לקבל אחד כזה מהכתובת: https://perspectiveapi.com/"
+  perspective_flag_message: "סביר להניח שזה פוסט רעיל."
