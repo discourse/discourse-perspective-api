@@ -13,4 +13,8 @@ he:
     perspective_notify_posting_min_toxicity: "רמת הוודאות של רעילות פוסט בין 0 ל־1. להציג התראה בחלונית כתיבת ההודעה כאשר משתמש מקליד משהו פוגעני."
     perspective_toxicity_model: "בחירת מודל רעילות ל־Perspective API של Google."
     perspective_google_api_key: "מפתח API של Google ל־API של Perspective. ניתן לקבל אחד כזה מהכתובת: https://perspectiveapi.com/"
+    perspective_check_private_message: "בדיקת וסימון של הודעות פרטיות אם הן רעילות. (לתשומת לבך: תוכן ההודעה יישלח למפקחים). תקף גם על מצב לאחר סיום המשימה."
+    perspective_check_secured_categories: "בדיקת קטגוריות פרטיות לאיתור פוסטים רעילים."
+    perspective_backfill_posts: "תשאול רעילות של פוסטים קיימים והקלטת התוצאות בשדות מותאמים, המצב הזה משבית בדיקה של פוסטים בזמן אמת."
+    perspective_historical_inspection_period: "פרק הזמן בימים להתחלת מחרוזת תשאול חדש לאחר סיום המחזור הקודם. יפעל רק אם `perspective_backfill_posts` פעיל"
   perspective_flag_message: "סביר להניח שזה פוסט רעיל."
