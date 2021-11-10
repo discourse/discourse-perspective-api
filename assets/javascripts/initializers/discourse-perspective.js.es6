@@ -55,7 +55,7 @@ function initialize(api) {
 
         ajax("/perspective/post_toxicity", {
           type: "POST",
-          data: { concat: concat },
+          data: { concat },
         })
           .then((response) => {
             if (response && response["score"] !== undefined) {
