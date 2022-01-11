@@ -5,3 +5,16 @@
 # https://translate.discourse.org/
 
 ru:
+  site_settings:
+    perspective_enabled: 'Включить плагин Discourse Perspective для фильтрации токсичных постов.'
+    perspective_notify_posting_min_toxicity_enable: "Проверка возможного токсичного содержимого, пока пользователь пытается его отправить."
+    perspective_flag_post_min_toxicity_enable: "Отмечать возможные токсичные сообщения и отправлять сообщения для уведомления модераторов и администраторов."
+    perspective_flag_post_min_toxicity: "Уровень достоверности токсичности сообщения между 0 и 1. Значение по умолчанию - достаточно высокое. Ознакомьтесь с документацией Perspective API, чтобы узнать, как рассчитываются оценки."
+    perspective_notify_posting_min_toxicity: "Уровень доверия к токсичности сообщения от 0 до 1. Показывать уведомление в композиторе, когда пользователь набирает что-то обидное."
+    perspective_toxicity_model: "Выберите модель токсичности для API Perspective от Google."
+    perspective_google_api_key: "Ключ Google API для Perspective API. Получить с: https://perspectiveapi.com/"
+    perspective_check_private_message: "Проверять и отмечать личные сообщения, если они токсичны. (Примечание: содержание сообщения будет отправлено модераторам). Также относится к режиму засыпки."
+    perspective_check_secured_categories: "Проверять личные категории на наличие потенциально токсичных сообщений."
+    perspective_backfill_posts: "Запрос токсичности существующих сообщений и запись результатов в пользовательские поля публикаций; В этом режиме отключается проверка публикаций в реальном времени."
+    perspective_historical_inspection_period: "Период в днях для начала новой итерации запроса после завершения последней итерации. Используется, только если включена «perspective_backfill_posts»"
+  perspective_flag_message: "Вполне вероятно, что это токсичное сообщение."

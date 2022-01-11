@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 ru:
+  js:
+    perspective:
+      perspective_message: "Похоже, то, что вы собираетесь разместить, может быть расценено как грубость или неуважение к другим, и может быть помечено для проверки."
+      composer_edit: "Вернуться к редактированию"
+      composer_continue: "Продолжить публикацию"
