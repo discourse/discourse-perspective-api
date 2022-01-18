@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 ar:
+  js:
+    perspective:
+      perspective_message: "يبدو أنك بصدد نشر شيء قد يُعتبَر فظًا أو لا يحترم الآخرين، وقد يتم الإبلاغ عنه للمراجعة."
+      composer_edit: "العودة والتعديل"
+      composer_continue: "متابعة النشر"

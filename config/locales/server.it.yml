@@ -5,3 +5,16 @@
 # https://translate.discourse.org/
 
 it:
+  site_settings:
+    perspective_enabled: 'Abilita il plugin Discourse Perspective per filtrare i messaggi offensivi.'
+    perspective_notify_posting_min_toxicity_enable: "Controlla eventuali contenuti offensivi mentre un utente sta tentando di inviarli."
+    perspective_flag_post_min_toxicity_enable: "Segnala eventuali messaggi offensivi e invia avvisi a moderatori e amministratori."
+    perspective_flag_post_min_toxicity: "Il livello di confidenza sui messaggi offensivi è compreso tra 0 e 1. Il valore predefinito è ragionevolmente alto. Leggi i documenti dell'API Perspective per vedere come vengono calcolati i punteggi."
+    perspective_notify_posting_min_toxicity: "Il livello di confidenza sui messaggi offensivi è compreso tra 0 e 1. Mostra una notifica all'autore se sta scrivendo qualcosa di offensivo."
+    perspective_toxicity_model: "Scegli il modello di valutazione dei contenuti offensivi per l'API Perspective di Google."
+    perspective_google_api_key: "Chiave API di Google per l'API Perspective. Ricevine una su: https://perspectiveapi.com/"
+    perspective_check_private_message: "Controlla i messaggi privati e segnalali se offensivi. (Nota: il contenuto del messaggio verrà inviato ai moderatori). Si applica anche alla modalità di recupero informazioni."
+    perspective_check_secured_categories: "Controlla le categorie private alla ricerca di messaggi potenzialmente offensivi."
+    perspective_backfill_posts: "Interroga le informazioni sui messaggi offensivi esistenti e registra i risultati nei campi personalizzati dei messaggi. Questa modalità disabilita il controllo in tempo reale dei messaggi."
+    perspective_historical_inspection_period: "Il numero di giorni per iniziare un nuova iterazione di interrogazione dopo aver terminato l'ultima. Impostazione usata solo se l'opzione `perspective_backfill_posts` è abilitata"
+  perspective_flag_message: "Messaggio molto probabilmente offensivo."

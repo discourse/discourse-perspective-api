@@ -5,3 +5,16 @@
 # https://translate.discourse.org/
 
 de:
+  site_settings:
+    perspective_enabled: 'Aktiviere das Discourse-Perspective-Plug-in zum Filtern von schädlichen Beiträgen.'
+    perspective_notify_posting_min_toxicity_enable: "Überprüfe Beiträge auf potenziell schädliche Inhalte, wenn ein Benutzer versucht, sie zu übermitteln."
+    perspective_flag_post_min_toxicity_enable: "Melde potenziell schädliche Beiträge und benachrichtige Moderatoren sowie Administratoren."
+    perspective_flag_post_min_toxicity: "Das Konfidenzniveau der Beitragsschädlichkeit zwischen 0 und 1. Der Standardwert ist angemessen hoch. Lies die Perspective-API-Dokumentation, um zu erfahren, wie die Werte berechnet werden."
+    perspective_notify_posting_min_toxicity: "Das Konfidenzniveau der Beitragsschädlichkeit zwischen 0 und 1. Zeige eine Benachrichtigung im Editor an, wenn der Benutzer etwas Verletzendes eingibt."
+    perspective_toxicity_model: "Wähle das Schädlichkeitsmodell für die Perspective-API von Google aus."
+    perspective_google_api_key: "Google-API-Schlüssel für Perspective-API. Verfügbar unter: https://perspectiveapi.com/"
+    perspective_check_private_message: "Überprüfe und melde private Nachrichten, falls sie schädlich sind. (Hinweis: Der Inhalt der Nachricht wird an die Moderatoren gesendet.) Gilt auch für den Backfill-Modus."
+    perspective_check_secured_categories: "Überprüfe private Kategorien auf potenziell schädliche Beiträge."
+    perspective_backfill_posts: "Frage die Schädlichkeit vorhandener Beiträge ab und zeichne die Ergebnisse in benutzerdefinierten Beitragsfeldern auf. Dieser Modus deaktiviert die Live-Prüfung für Beiträge."
+    perspective_historical_inspection_period: "Der Zeitraum in Tagen, um eine neue Abfrage-Iteration nach Abschluss der letzten Iteration zu starten. Wird nur verwendet, wenn `perspective_backfill_posts` aktiviert ist"
+  perspective_flag_message: "Höchstwahrscheinlich ein schädlicher Beitrag."

@@ -5,3 +5,16 @@
 # https://translate.discourse.org/
 
 es:
+  site_settings:
+    perspective_enabled: 'Habilitar el plugin Discourse Perspective para filtrar publicaciones tóxicas.'
+    perspective_notify_posting_min_toxicity_enable: "Comprobar posible contenido tóxico mientras un usuario intenta enviarlo."
+    perspective_flag_post_min_toxicity_enable: "Marcar posibles mensajes tóxicos y enviar mensajes para notificar a los moderadores y administradores."
+    perspective_flag_post_min_toxicity: "El nivel de confianza de la toxicidad de la publicación entre 0 y 1. El valor predeterminado es razonablemente alto. Lee los documentos de la API de Perspective para ver cómo se calculan las puntuaciones."
+    perspective_notify_posting_min_toxicity: "El nivel de confianza de la toxicidad de la publicación entre 0 y 1. Muestra una notificación en el editor cuando el usuario escribe algo hiriente."
+    perspective_toxicity_model: "Elige el modelo de toxicidad para la API de Perspective de Google."
+    perspective_google_api_key: "Clave API de Google para la API de Perspective. Consíguela en: https://perspectiveapi.com/"
+    perspective_check_private_message: "Comprueba y marca los mensajes privados si son tóxicos. (Nota: El contenido del mensaje se enviará a los moderadores). También se aplica al modo de relleno."
+    perspective_check_secured_categories: "Comprueba las categorías privadas en busca de publicaciones potencialmente tóxicas."
+    perspective_backfill_posts: "Consulta la toxicidad de las publicaciones existentes y registra los resultados en los campos personalizados de la publicación; este modo deshabilita la comprobación en vivo de los mensajes."
+    perspective_historical_inspection_period: "El período en días para iniciar una nueva consulta de iteración después de terminar la última iteración. Se usa solo si `perspective_backfill_posts` está habilitado"
+  perspective_flag_message: "Es muy probable que sea una publicación tóxica."

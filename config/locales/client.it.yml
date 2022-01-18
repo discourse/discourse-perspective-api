@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 it:
+  js:
+    perspective:
+      perspective_message: "Il messaggio che stai per pubblicare potrebbe essere considerato scortese o irrispettoso nei confronti degli altri e potrebbe essere segnalato per essere sottoposto a revisione."
+      composer_edit: "Torna indietro e modificalo"
+      composer_continue: "Continua e pubblica"

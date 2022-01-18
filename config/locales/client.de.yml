@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 de:
+  js:
+    perspective:
+      perspective_message: "Es sieht so aus, als ob das, was du veröffentlichen möchtest, als unhöflich oder respektlos gegenüber anderen angesehen und zur Überprüfung gesendet werden könnte."
+      composer_edit: "Zurück und bearbeiten"
+      composer_continue: "Veröffentlichung fortsetzen"

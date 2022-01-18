@@ -5,3 +5,16 @@
 # https://translate.discourse.org/
 
 fr:
+  site_settings:
+    perspective_enabled: 'Activer l''extension Discourse Perspective pour filtrer les publications toxiques.'
+    perspective_notify_posting_min_toxicity_enable: "Vérifiez le contenu potentiellement toxique pendant que l'utilisateur tente de l'envoyer."
+    perspective_flag_post_min_toxicity_enable: "Signalez les publications potentiellement toxiques et envoyez des messages pour informer les modérateurs et les administrateurs."
+    perspective_flag_post_min_toxicity: "Le niveau de confiance de post-toxicité compris entre 0 et 1. La valeur par défaut est raisonnablement élevée. Lisez la documentation de l'API Perspective pour savoir comment les scores sont calculés."
+    perspective_notify_posting_min_toxicity: "Le niveau de confiance de post-toxicité compris entre 0 et 1. Affiche une notification dans l'éditeur lorsque l'utilisateur saisit quelque chose de blessant."
+    perspective_toxicity_model: "Choisissez un modèle de toxicité pour l'API Perspective de Google."
+    perspective_google_api_key: "Clé d'API Google pour l'API Perspective. Obtenez-en un sur : https://perspectiveapi.com/"
+    perspective_check_private_message: "Vérifiez et marquez les messages privés s'ils sont toxiques. (Remarque : le contenu du message sera envoyé aux modérateurs). S'applique également au mode de remplissage."
+    perspective_check_secured_categories: "Consultez les catégories privées pour les publications potentiellement toxiques."
+    perspective_backfill_posts: "Interrogez la toxicité des messages existants et enregistrez les résultats dans les champs de publication personnalisés. Ce mode désactive la vérification en direct des messages."
+    perspective_historical_inspection_period: "La période en jours pour démarrer une nouvelle itération de requête après avoir terminé la dernière itération. Utilisé uniquement si « perspective_backfill_posts » est activé"
+  perspective_flag_message: "Il s'agit très probablement d'un message toxique."
