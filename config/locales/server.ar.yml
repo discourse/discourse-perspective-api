@@ -5,3 +5,16 @@
 # https://translate.discourse.org/
 
 ar:
+  site_settings:
+    perspective_enabled: 'تفعيل المكوِّن الإضافي Discourse Perspective لتصفية المنشورات ذات التأثير الضار'
+    perspective_notify_posting_min_toxicity_enable: "التحقُّق من المحتوى المحتمل أن يكون ذا تأثير ضار بينما يحاول المستخدم إرساله"
+    perspective_flag_post_min_toxicity_enable: "الإبلاغ عن الموضوعات المحتمل أن تكون ذات تأثير ضار وإرسال الرسائل لإخطار المشرفين والمسؤولين."
+    perspective_flag_post_min_toxicity: "مستوى الثقة في التأثير الضار للمنشور بين 0 و1. القيمة الافتراضية عالية بشكلٍ معقول. اقرأ مستندات Perspective API لمعرفة كيفية احتساب الدرجات."
+    perspective_notify_posting_min_toxicity: "مستوى الثقة في التأثير الضار للمنشور بين 0 و1. إظهار إشعار في أداة الإنشاء عندما يكتب المستخدم شيئًا مسيئًا"
+    perspective_toxicity_model: "اختيار نموذج التأثير الضار لـ Perspective API من Google"
+    perspective_google_api_key: "مفتاح Google API لـ Perspective API. احصل على واحد من: https://perspectiveapi.com/"
+    perspective_check_private_message: "التحقُّق من الرسائل الخاصة والإبلاغ عنها إذا كانت ذات تأثير ضار. (ملاحظة: سيتم إرسال محتوى الرسالة إلى المشرفين). ينطبق ذلك أيضًا على وضع طلب المعلومات."
+    perspective_check_secured_categories: "التحقُّق من الفئات الخاصة للمنشورات المحتمل أن تكون ذات تأثير ضار."
+    perspective_backfill_posts: "الاستعلام عن التأثير الضار للمنشورات الحالية وتسجيل النتائج في الحقول المخصَّصة للمنشور؛ يؤدي هذا الوضع إلى إيقاف التحقُّق المباشر من المنشورات."
+    perspective_historical_inspection_period: "الفترة بالأيام لبدء تكرار استعلام جديد بعد الانتهاء من التكرار الأخير. يُستخدَم فقط في حال تفعيل `perspective_backfill_posts`"
+  perspective_flag_message: "من المرجَّح جدًا أن يكون منشورًا ذا تأثير ضار."

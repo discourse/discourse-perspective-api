@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 es:
+  js:
+    perspective:
+      perspective_message: "Parece que lo que estás a punto de publicar puede considerarse grosero o irrespetuoso con los demás, y es posible que se marque para su revisión."
+      composer_edit: "Volver atrás y editar"
+      composer_continue: "Continuar publicando"

@@ -5,3 +5,16 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  site_settings:
+    perspective_enabled: '启用 Discourse Perspective 插件过滤有害帖子。'
+    perspective_notify_posting_min_toxicity_enable: "在用户尝试提交时检查可能的有害内容。"
+    perspective_flag_post_min_toxicity_enable: "举报可能的有害帖子并发送消息通知版主和管理员。"
+    perspective_flag_post_min_toxicity: "帖子有害度置信水平介于 0 和 1 之间。默认值相当高。阅读 Perspective API 文档，了解分数的计算方式。"
+    perspective_notify_posting_min_toxicity: "帖子有害度置信水平介于 0 和 1 之间。当用户键入有害内容时，在编辑器中显示通知。"
+    perspective_toxicity_model: "为 Google 的 Perspective API 选择有害度模型。"
+    perspective_google_api_key: "Perspective API 的 Google API 密钥。获取自：https://perspectiveapi.com/"
+    perspective_check_private_message: "如果有害，请检查并举报私信。（注：消息内容将被发送给版主）。回填模式同样适用。"
+    perspective_check_secured_categories: "检查不公开类别是否存在潜在的有害帖子。"
+    perspective_backfill_posts: "查询现有帖子的有害度，并将结果记录在帖子自定义字段中。此模式禁用帖子的实时检查。"
+    perspective_historical_inspection_period: "完成上一次迭代后开始新查询迭代的天数。仅在启用 `perspective_backfill_posts` 时使用"
+  perspective_flag_message: "很有可能是有害帖子。"
