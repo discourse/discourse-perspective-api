@@ -5,3 +5,16 @@
 # https://translate.discourse.org/
 
 fi:
+  site_settings:
+    perspective_enabled: 'Ota Discourse Perspective -lisäosa käyttöön haitallisten viestien suodattamiseksi.'
+    perspective_notify_posting_min_toxicity_enable: "Tarkista mahdollisesti haitallinen sisältö, kun käyttäjä yrittää lähettää sitä."
+    perspective_flag_post_min_toxicity_enable: "Liputa mahdollisesti haitalliset viestit ja lähetä ilmoitusviestit valvojille ja ylläpitäjille."
+    perspective_flag_post_min_toxicity: "Viestin haitallisuuden luottavaisuustaso välillä 0 ja 1. Oletusarvo on kohtuullisen korkea. Lue tietoa pistemäärien laskemisesta Perspective APIn ohjeista."
+    perspective_notify_posting_min_toxicity: "Viestin haitallisuuden luottavaisuustaso välillä 0 ja 1. Näytä ilmoitus tekstieditorissa, kun käyttäjä kirjoittaa jotakin loukkaavaa."
+    perspective_toxicity_model: "Valitse haitallisuusmalli Googlen Perspective APIlle."
+    perspective_google_api_key: "Googlen API-avain Perspective APIlle. Hanki avain osoitteesta: https://perspectiveapi.com/"
+    perspective_check_private_message: "Tarkista ja merkitse yksityisviestejä haitallisiksi. (Huomautus: viestin sisältö lähetetään valvojille). Koskee myös jälkitäyttötilaa."
+    perspective_check_secured_categories: "Tarkista mahdollisesti haitalliset viestit yksityisiltä alueilta."
+    perspective_backfill_posts: "Selvitä olemassa olevien viestien haitallisuus ja kirjaa tulokset viestin mukautettuihin kenttiin; tämä tila poistaa viestien reaaliaikaisen tarkastuksen käytöstä."
+    perspective_historical_inspection_period: "Ajanjakso päivinä, jolloin uusi kyselyiteraatio aloitetaan viimeisen iteraation jälkeen. Käytetään vain, jos \"perspective_backfill_posts\" on käytössä,"
+  perspective_flag_message: "Erittäin todennäköisesti haitallinen viesti."
