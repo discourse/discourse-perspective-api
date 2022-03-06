@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 ja:
+  js:
+    perspective:
+      perspective_message: "あなたが投稿しようとしているものは、他のユーザーに失礼または無礼と見なされ、要レビューとして通報される可能性があるようです。"
+      composer_edit: "戻って編集する"
+      composer_continue: "投稿を続ける"

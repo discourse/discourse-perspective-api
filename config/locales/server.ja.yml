@@ -5,3 +5,16 @@
 # https://translate.discourse.org/
 
 ja:
+  site_settings:
+    perspective_enabled: 'Discourse Perspective プラグインを有効にし、有害な投稿をフィルタリングします。'
+    perspective_notify_posting_min_toxicity_enable: "ユーザーが投稿しようとしているときに、有害である可能性のあるコンテンツを確認します。"
+    perspective_flag_post_min_toxicity_enable: "有害な可能性のある投稿を通報し、モデレーターと管理者に通知します。"
+    perspective_flag_post_min_toxicity: "投稿の有害性の信頼水準は 0 から 1 です。デフォルト値は適度に高くなっています。スコアの計算方法については、Perspective API ドキュメントをご覧ください。"
+    perspective_notify_posting_min_toxicity: "投稿の有害性の信頼水準は 0 から 1 です。ユーザーが有害な内容を入力したときに、作成者に通知を表示します。"
+    perspective_toxicity_model: "Google の Perspective API の有害モデルを選択します。"
+    perspective_google_api_key: "Perspective API の Google API キーです。https://perspectiveapi.com/ から取得できます"
+    perspective_check_private_message: "有害であることを確認し、プライベートメッセージを通報します。（注意: メッセージのコンテンツはモデレーターに送信されます）。また、バックフィルモードにも適用されます。"
+    perspective_check_secured_categories: "非公開カテゴリで有害な可能性のある投稿を確認します。"
+    perspective_backfill_posts: "既存の投稿の有害性をクエリし、投稿のカスタムフィールドに結果を記録します。このモードは投稿のライブチェックを無効にします。"
+    perspective_historical_inspection_period: "最後のクエリの反復が終了してから新しい反復を開始するまでの日数。`perspective_backfill_posts` が有効である場合にのみ使用されます。"
+  perspective_flag_message: "非常に有害な可能性のある投稿。"

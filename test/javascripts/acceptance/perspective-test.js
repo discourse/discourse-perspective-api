@@ -1,4 +1,5 @@
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 
 acceptance("Discourse Perspective", function (needs) {
   needs.user();

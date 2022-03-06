@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 fi:
+  js:
+    perspective:
+      perspective_message: "Näyttää siltä, että julkaisemaasi sisältöä voidaan pitää epäkohteliaana tai epäkunnioittavana muita kohtaan, ja se voidaan merkitä käsiteltäväksi."
+      composer_edit: "Palaa takaisin ja muokkaa"
+      composer_continue: "Jatka lähettämistä"

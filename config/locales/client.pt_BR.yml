@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 pt_BR:
+  js:
+    perspective:
+      perspective_message: "Parece que você está prestes a postar algo que possa ser considerado rude ou desrespeitoso a outras pessoas, a postagem pode ser sinalizada para revisão."
+      composer_edit: "Voltar e editar"
+      composer_continue: "Continuar publicando"

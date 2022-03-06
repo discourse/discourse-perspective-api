@@ -5,3 +5,16 @@
 # https://translate.discourse.org/
 
 pt_BR:
+  site_settings:
+    perspective_enabled: 'Ative o plugin Discourse Perspective para filtrar postagens ofensivas.'
+    perspective_notify_posting_min_toxicity_enable: "Verifique conteúdo possivelmente ofensivo enquanto o(a) usuário(a) estiver tentando enviar."
+    perspective_flag_post_min_toxicity_enable: "Sinalize postagens possivelmente nocivas e envie mensagens para notificar moderadores(as) e administradores(as)."
+    perspective_flag_post_min_toxicity: "O nível de confiança da nocividade da postagem varia de 0 a 1. O valor padrão é razoavelmente alto. Leia a documentaçao da API Perspective para ver como a pontuação é calculada."
+    perspective_notify_posting_min_toxicity: "O nível de confiança da nocividade da postagem varia de 0 a 1. Exiba uma notificação no compositor quando o(a) usuário(a) escrever algo ofensivo."
+    perspective_toxicity_model: "Escolha o modelo de nocividade para a API Perspective, do Google."
+    perspective_google_api_key: "A chave da API do Google. Obtenha uma em https://perspectiveapi.com/"
+    perspective_check_private_message: "Confira e sinalize mensagens privadas caso sejam tóxicas. (Observação: o conteúdo da mensagem será enviado aos(às) moderadores(as)). Isso também se aplica ao modo de provisionamento."
+    perspective_check_secured_categories: "Confira categorias privadas para dectectar postagens possivelmente tóxicas."
+    perspective_backfill_posts: "Consulte a toxicidade de postagens existentes e registre os resultados nos campos personalizados da postagem. Esse modo desativa a verificação em tempo real para postagens."
+    perspective_historical_inspection_period: "O período em dias para iniciar uma nova iteração de consultas após o término da última iteração. Use apenas se \"perspective_backfill_posts\" estiver ativado"
+  perspective_flag_message: "Alta possibilidade de ser uma publicação nociva."

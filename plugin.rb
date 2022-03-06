@@ -5,6 +5,7 @@
 # version: 1.2
 # authors: Erick Guan
 # url: https://github.com/discourse/discourse-perspective-api
+# transpile_js: true
 
 enabled_site_setting :perspective_enabled
 
