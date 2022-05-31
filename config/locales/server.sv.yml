@@ -5,3 +5,16 @@
 # https://translate.discourse.org/
 
 sv:
+  site_settings:
+    perspective_enabled: 'Aktivera insticksprogrammet Discourse Perspective för att filtrera olämpliga inlägg.'
+    perspective_notify_posting_min_toxicity_enable: "Kontrollera eventuellt olämpligt innehåll medan en användare försöker skicka in det."
+    perspective_flag_post_min_toxicity_enable: "Flagga möjliga olämpliga inlägg och skicka meddelanden för att meddela moderatorer och administratörer."
+    perspective_flag_post_min_toxicity: "Inläggets förtroendevärde för lämplighet ligger mellan 0 och 1. Standardvärdet är relativt högt. Läs dokumentationen om Perspective API för att se hur poäng beräknas."
+    perspective_notify_posting_min_toxicity: "Inläggets förtroendevärde för lämplighet ligger mellan 0 och 1. Visa ett meddelande i kompositören när användaren skriver något olämpligt."
+    perspective_toxicity_model: "Välj olämplighetsmodell för Googles Perspective API."
+    perspective_google_api_key: "Google API-nyckel för Perspective API. Skaffa en från: https://perspectiveapi.com/"
+    perspective_check_private_message: "Kontrollera och flagga privata meddelanden om de är olämpliga. (Observera: Meddelandets innehåll kommer att skickas till moderatorer). Gäller även återfyllningsläge."
+    perspective_check_secured_categories: "Kontrollera privata kategorier för potentiellt olämpliga inlägg."
+    perspective_backfill_posts: "Fråga efter olämpligheten i befintliga inlägg och registrera resultaten i anpassade fält; Detta läge inaktiverar realtidskontroll av inlägg."
+    perspective_historical_inspection_period: "Period i dagar för att starta en ny iteration av en fråga efter att den senaste iterationen avslutats. Används endast om `perspective_backfill_posts` är aktiverat."
+  perspective_flag_message: "Mycket troligt ett olämpligt inlägg."
