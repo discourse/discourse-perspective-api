@@ -90,6 +90,10 @@ function initialize(api) {
                 label: I18n.t("perspective.composer_edit"),
                 class: "btn-primary perspective-edit-post",
                 callback: () => {
+                  if (this.isDestroying || this.isDestroyed) {
+                    return;
+                  }
+
                   this.set("disableSubmit", false);
                 },
               },
