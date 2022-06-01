@@ -2,7 +2,6 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { ajax } from "discourse/lib/ajax";
 import I18n from "I18n";
 import bootbox from "bootbox";
-import { isTesting } from "discourse-common/config/environment";
 
 function initialize(api) {
   const siteSettings = api.container.lookup("site-settings:main");
