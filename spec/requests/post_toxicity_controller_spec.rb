@@ -19,21 +19,21 @@ describe ::Perspective::PostToxicityController do
   describe '.show' do
     it 'returns the score if above threshold' do
       stub_request(:post, api_endpoint).to_return(status: 200, body: api_response_high_toxicity_body, headers: {})
-      post '/perspective/post_toxicity.json', params: { concat: 'Fuck. This is outrageous and dumb. Go to hell.' }, headers: headers
+      post '/perspective/post_toxicity.json', params: { concat: 'this is a toxic comment' }, headers: headers
       json = JSON.parse(response.body)
       expect(json['score']).to eq 0.915122943
     end
 
     it 'returns nothing if under threshold' do
       stub_request(:post, api_endpoint).to_return(status: 200, body: api_response_toxicity_body, headers: {})
-      post '/perspective/post_toxicity.json', params: { concat: 'Fuck. This is outrageous and dumb. Go to hell.' }, headers: headers
+      post '/perspective/post_toxicity.json', params: { concat: 'this is a toxic comment' }, headers: headers
       json = JSON.parse(response.body)
       expect(json).to eq({})
     end
 
     it 'returns nothing if any network errors' do
       stub_request(:post, api_endpoint).to_return(status: 403)
-      post '/perspective/post_toxicity.json', params: { concat: 'Fuck. This is outrageous and dumb. Go to hell.' }, headers: headers
+      post '/perspective/post_toxicity.json', params: { concat: 'this is a toxic comment' }, headers: headers
       json = JSON.parse(response.body)
       expect(json).to eq({})
     end

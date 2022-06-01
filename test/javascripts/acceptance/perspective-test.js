@@ -25,10 +25,7 @@ acceptance("Discourse Perspective", function (needs) {
     await click("#create-topic");
 
     await fillIn("#reply-title", "this is a normal title");
-    await fillIn(
-      ".d-editor-input",
-      "Fuck. This is outrageous and dumb. Go to hell."
-    );
+    await fillIn(".d-editor-input", "this is a toxic comment");
 
     await click("#reply-control button.create");
 
