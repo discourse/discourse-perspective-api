@@ -27,6 +27,10 @@ function initialize(api) {
     },
 
     save(force) {
+      if (!this.siteSettings.perspective_enabled) {
+        return this._super(...arguments);
+      }
+
       // same validation code from controller
       if (this.disableSubmit && !this._perspective_checked) {
         return;
