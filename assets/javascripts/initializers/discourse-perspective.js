@@ -11,19 +11,9 @@ function initialize(api) {
 
     perspectiveSave(force) {
       this.set("_perspective_checked", true);
-      const result = this.save(force);
-
-      // it's valid for save() to return null since we do that in core,
-      // handle that here because sometimes we return a promise
-      if (result != null && typeof result.then === "function") {
-        result.finally(() => {
-          this.set("disableSubmit", false);
-          this.set("_perspective_checked", false);
-        });
-      } else {
-        this.set("disableSubmit", false);
+      this.save(force).finally(() => {
         this.set("_perspective_checked", false);
-      }
+      });
     },
 
     save(force) {
@@ -53,57 +43,53 @@ function initialize(api) {
       const bypassCheck = bypassPM || bypassSecuredCategories;
 
       if (!bypassCheck && !this._perspective_checked) {
-        return this.perspectiveCheckToxicity(composer, force);
+        let concat = "";
+
+        ["title", "raw", "reply"].forEach((item) => {
+          const content = composer.get(item);
+          if (content) {
+            concat += `${content} `;
+          }
+        });
+
+        concat.trim();
+
+        ajax("/perspective/post_toxicity", {
+          type: "POST",
+          data: { concat },
+        })
+          .then((response) => {
+            if (response && response["score"] !== undefined) {
+              const message = I18n.t("perspective.perspective_message");
+
+              let buttons = [
+                {
+                  label: I18n.t("perspective.composer_continue"),
+                  class: "btn",
+                  callback: () => this.perspectiveSave(force),
+                },
+                {
+                  label: I18n.t("perspective.composer_edit"),
+                  class: "btn-primary",
+                  callback: () => {
+                    this.set("disableSubmit", false);
+                  },
+                },
+              ];
+              bootbox.dialog(message, buttons);
+              return;
+            } else {
+              this.perspectiveSave(force);
+            }
+          })
+          .catch(() => {
+            // fail silently
+            this.perspectiveSave(force);
+          });
       } else {
         this.set("disableSubmit", false);
         return this._super(force);
       }
-    },
-
-    perspectiveCheckToxicity(composer, force) {
-      let concat = "";
-
-      ["title", "raw", "reply"].forEach((item) => {
-        const content = composer.get(item);
-        if (content) {
-          concat += `${content} `;
-        }
-      });
-
-      concat.trim();
-
-      return ajax("/perspective/post_toxicity", {
-        type: "POST",
-        data: { concat },
-      })
-        .then((response) => {
-          if (response && response["score"] !== undefined) {
-            const message = I18n.t("perspective.perspective_message");
-
-            let buttons = [
-              {
-                label: I18n.t("perspective.composer_continue"),
-                class: "btn perspective-continue-post",
-                callback: () => this.perspectiveSave(force),
-              },
-              {
-                label: I18n.t("perspective.composer_edit"),
-                class: "btn-primary perspective-edit-post",
-                callback: () => {
-                  this.set("disableSubmit", false);
-                },
-              },
-            ];
-            bootbox.dialog(message, buttons);
-            return;
-          } else {
-            this.perspectiveSave(force);
-          }
-        })
-        .catch(() => {
-          // fail silently
-          this.perspectiveSave(force);
-        });
     },
   });
 }
