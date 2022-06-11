@@ -11,13 +11,13 @@ plugins:
   perspective_notify_posting_min_toxicity:
     default: 0.85
   perspective_toxicity_model:
-    default: 'standard'
+    default: "standard"
     type: enum
     choices:
       - standard
       - severe toxicity (experimental)
   perspective_google_api_key:
-    default: ''
+    default: ""
   perspective_check_private_message:
     default: false
     client: true
@@ -29,4 +29,3 @@ plugins:
     default: false
   perspective_historical_inspection_period:
     default: 300
-
