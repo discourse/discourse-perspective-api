@@ -1,7 +1,10 @@
 {
+  "name": "discourse-perspective-api",
+  "version": "1.2.0",
+  "repository": "https://github.com/discourse/discourse-perspective-api",
   "author": "Discourse",
   "license": "MIT",
   "devDependencies": {
-    "eslint-config-discourse": "^3.0.0"
+    "eslint-config-discourse": "^3.1.0"
   }
 }
