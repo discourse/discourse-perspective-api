@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 sv:
+  js:
+    perspective:
+      perspective_message: "Det verkar som att det du ska lägga upp kan anses vara oförskämt eller respektlöst mot andra och kan flaggas för granskning."
+      composer_edit: "Gå tillbaka och redigera"
+      composer_continue: "Fortsätt publicera"
