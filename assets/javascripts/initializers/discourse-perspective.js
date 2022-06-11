@@ -7,6 +7,7 @@ function initialize(api) {
   const siteSettings = api.container.lookup("site-settings:main");
 
   api.modifyClass("controller:composer", {
+    pluginId: "discourse-perspective-api",
     _perspective_checked: null,
 
     perspectiveSave(force) {
