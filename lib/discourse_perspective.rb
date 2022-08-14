@@ -163,7 +163,7 @@ module DiscoursePerspective
     # default not to check secured categories
     return false if !SiteSetting.perspective_check_secured_categories && post&.topic&.category&.read_restricted?
     # don't check trashed topics
-    return false if post&.topic.trashed?
+    return false if post&.topic&.trashed?
 
     stripped = post.raw.strip
 
