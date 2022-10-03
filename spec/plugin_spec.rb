@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'scanning posts using the porspective API' do
+describe DiscoursePerspective do
 
   before do
     SiteSetting.perspective_enabled = true

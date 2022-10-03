@@ -12,7 +12,7 @@ describe Jobs::InspectToxicPost do
     end
   end
 
-  context '.execute' do
+  describe '.execute' do
     it 'returns when the plugin is not enabled' do
       SiteSetting.perspective_enabled = false
       SiteSetting.perspective_backfill_posts = true

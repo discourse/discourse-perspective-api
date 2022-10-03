@@ -130,7 +130,7 @@ describe DiscoursePerspective do
     end
   end
 
-  context 'requests' do
+  describe 'requests' do
     let(:user) { Fabricate(:user) }
     let(:post) { Fabricate(:post, user: user) }
     let(:content) { "Hello world" }
@@ -159,7 +159,7 @@ describe DiscoursePerspective do
       end
     end
 
-    context 'severe toxicity' do
+    context 'with severe toxicity' do
       before do
         stub_request(:post, API_ENDPOINT).to_return(status: 200, body: API_RESPONSE_SEVERE_TOXICITY_BODY, headers: {})
       end
