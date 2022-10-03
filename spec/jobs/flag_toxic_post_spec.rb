@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe Jobs::FlagToxicPost do
 
-  context '.execute' do
+  describe '.execute' do
     it 'raises an error when post_id is missing' do
       expect { subject.execute({}) }.to raise_error(Discourse::InvalidParameters)
     end
