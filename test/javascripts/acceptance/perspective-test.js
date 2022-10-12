@@ -1,4 +1,5 @@
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
@@ -20,6 +21,9 @@ acceptance(
     test("Create a toxic topic and click edit before continuing", async function (assert) {
       await visit("/");
       await click("#create-topic");
+      const categoryChooser = selectKit(".category-chooser");
+      await categoryChooser.expand();
+      await categoryChooser.selectRowByValue(2);
 
       await fillIn("#reply-title", "this is a normal title");
       await fillIn(".d-editor-input", "everyone is a doo-doo head!");
@@ -36,6 +40,9 @@ acceptance(
     test("Create a toxic topic and click continue with post creation", async function (assert) {
       await visit("/");
       await click("#create-topic");
+      const categoryChooser = selectKit(".category-chooser");
+      await categoryChooser.expand();
+      await categoryChooser.selectRowByValue(2);
 
       await fillIn("#reply-title", "this is a normal title");
       await fillIn(".d-editor-input", "everyone is a doo-doo head!");
@@ -64,6 +71,9 @@ acceptance("Discourse Perspective | Enabled | No Post Score", function (needs) {
   test("Create a topic without issues", async function (assert) {
     await visit("/");
     await click("#create-topic");
+    const categoryChooser = selectKit(".category-chooser");
+    await categoryChooser.expand();
+    await categoryChooser.selectRowByValue(2);
 
     await fillIn("#reply-title", "this is a normal title");
     await fillIn(".d-editor-input", "everyone is a doo-doo head!");
