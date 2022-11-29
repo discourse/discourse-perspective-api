@@ -5,3 +5,16 @@
 # https://translate.discourse.org/
 
 nl:
+  site_settings:
+    perspective_enabled: 'Schakel de plug-in Discourse Perspective in om giftige berichten te filteren.'
+    perspective_notify_posting_min_toxicity_enable: "Controleer mogelijke giftige inhoud terwijl een gebruiker deze probeert in te dienen."
+    perspective_flag_post_min_toxicity_enable: "Markeer mogelijke giftige berichten en stuur berichten om moderators en beheerders op de hoogte te stellen."
+    perspective_flag_post_min_toxicity: "Het betrouwbaarheidsniveau van berichttoxiciteit tussen 0 en 1. De standaardwaarde is redelijk hoog. Lees de Perspective API-documenten om te zien hoe scores worden berekend."
+    perspective_notify_posting_min_toxicity: "Het betrouwbaarheidsniveau van berichttoxiciteit tussen 0 en 1. Toon een melding in de editor wanneer de gebruiker iets kwetsends typt."
+    perspective_toxicity_model: "Kies het toxiciteitsmodel voor de Perspective-API van Google."
+    perspective_google_api_key: "Google-API-sleutel voor de Perspective-API. Hier krijg je er een: https://perspectiveapi.com/"
+    perspective_check_private_message: "Controleer en markeer privéberichten als ze giftig zijn. (Opmerking: de inhoud van het bericht wordt naar moderators gestuurd). Geldt ook voor de backfillmodus."
+    perspective_check_secured_categories: "Controleer privécategorieën op mogelijk giftige berichten."
+    perspective_backfill_posts: "Vraag naar de giftigheid van bestaande berichten en leg de resultaten vast in aangepaste velden voor berichten. Deze modus schakelt live controleren van berichten uit."
+    perspective_historical_inspection_period: "De periode in dagen om een nieuwe query-iteratie te starten nadat de laatste iteratie is voltooid. Wordt alleen gebruikt als 'perspective_backfill_posts' is ingeschakeld"
+  perspective_flag_message: "Zeer waarschijnlijk een giftig bericht."

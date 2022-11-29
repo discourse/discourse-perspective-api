@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 nl:
+  js:
+    perspective:
+      perspective_message: "Het lijkt erop dat wat je gaat plaatsen als grof of respectloos tegenover anderen kan worden beschouwd en ter beoordeling kan worden gemarkeerd."
+      composer_edit: "Terug en bewerken"
+      composer_continue: "Doorgaan met plaatsen"
