@@ -1,38 +1,37 @@
 # frozen_string_literal: true
 
 module DiscoursePerspective
-  ANALYZE_COMMENT_ENDPOINT = '/v1alpha1/comments:analyze'
-  GOOGLE_API_DOMAIN = 'https://commentanalyzer.googleapis.com'
-  POST_ANALYSIS_FIELD_PREFIX = 'post_perspective'
+  ANALYZE_COMMENT_ENDPOINT = "/v1alpha1/comments:analyze"
+  GOOGLE_API_DOMAIN = "https://commentanalyzer.googleapis.com"
+  POST_ANALYSIS_FIELD_PREFIX = "post_perspective"
 
-  class NetworkError < StandardError; end
+  class NetworkError < StandardError
+  end
 
   class AnalyzeComment
     def initialize(post, user_id)
       @post = post
-      @user_id = user_id || 'anonymous'
+      @user_id = user_id || "anonymous"
     end
 
     def to_json
       # This is a hard limit from Google API. (20000 bytes)
       # https://github.com/conversationai/perspectiveapi/blob/master/2-api/limits.md#character-limit-for-requests
       raw = @post.raw
-      while raw.bytesize > 20.kilobytes
-        raw = raw[0..-5]
-      end
+      raw = raw[0..-5] while raw.bytesize > 20.kilobytes
       payload = {
         comment: {
-          text: raw
+          text: raw,
         },
         doNotStore: true,
-        sessionId: "#{Discourse.base_url}_#{@user_id}"
+        sessionId: "#{Discourse.base_url}_#{@user_id}",
       }
 
       case SiteSetting.perspective_toxicity_model
-      when 'standard'
-        payload[:requestedAttributes] = { TOXICITY: { scoreType: 'PROBABILITY' } }
-      when 'severe toxicity (experimental)'
-        payload[:requestedAttributes] = { SEVERE_TOXICITY: { scoreType: 'PROBABILITY' } }
+      when "standard"
+        payload[:requestedAttributes] = { TOXICITY: { scoreType: "PROBABILITY" } }
+      when "severe toxicity (experimental)"
+        payload[:requestedAttributes] = { SEVERE_TOXICITY: { scoreType: "PROBABILITY" } }
       end
 
       payload.to_json
@@ -46,25 +45,29 @@ module DiscoursePerspective
       write_timeout: 3,
       ssl_verify_peer: true,
       retry_limit: 0,
-      persistent: true
+      persistent: true,
     }
   end
 
   def self.unload_json(response)
-    MultiJson.load(response) rescue {}
+    begin
+      MultiJson.load(response)
+    rescue StandardError
+      {}
+    end
   end
 
-  SCORE_KEY = 'score'
+  SCORE_KEY = "score"
   def self.extract_value_from_analyze_comment_response(response)
     response = self.unload_json(response)
     begin
-      Hash[response['attributeScores'].map do |attribute|
-        [SCORE_KEY, attribute[1].dig('summaryScore', 'value') || 0.0]
-      end].symbolize_keys
-    rescue
-      Hash.new.tap do |dummy|
-        dummy.default = 0.0
-      end
+      Hash[
+        response["attributeScores"].map do |attribute|
+          [SCORE_KEY, attribute[1].dig("summaryScore", "value") || 0.0]
+        end
+      ].symbolize_keys
+    rescue StandardError
+      Hash.new.tap { |dummy| dummy.default = 0.0 }
     end
   end
 
@@ -74,16 +77,16 @@ module DiscoursePerspective
         Discourse.system_user,
         post,
         PostActionType.types[:notify_moderators],
-        message: I18n.t('perspective_flag_message')
+        message: I18n.t("perspective_flag_message"),
       )
     end
   end
 
   def self.post_score_field_name
     case SiteSetting.perspective_toxicity_model
-    when 'standard'
+    when "standard"
       "#{POST_ANALYSIS_FIELD_PREFIX}_toxicity"
-    when 'severe toxicity (experimental)'
+    when "severe toxicity (experimental)"
       "#{POST_ANALYSIS_FIELD_PREFIX}_severe_toxicity"
     end
   end
@@ -105,9 +108,7 @@ module DiscoursePerspective
   def self.check_content_toxicity(content, user_id)
     post = RawContent.new(content, user_id)
     score = self.score_comment(post)
-    if score[:score] > SiteSetting.perspective_notify_posting_min_toxicity
-      score
-    end
+    score if score[:score] > SiteSetting.perspective_notify_posting_min_toxicity
   end
 
   @mutex = Mutex.new
@@ -119,7 +120,7 @@ module DiscoursePerspective
         # this avoids a leak, Google have tons of IPs and certs just keep piling on
         begin
           @conn.reset
-        rescue
+        rescue StandardError
           # trust the GC here...
         end
         @conn = nil
@@ -132,18 +133,27 @@ module DiscoursePerspective
 
       body = analyze_comment.to_json
       headers = {
-        'Accept' => '*/*',
-        'Content-Length' => body.bytesize,
-        'Content-Type' => 'application/json',
-        'User-Agent' => "Discourse/#{Discourse::VERSION::STRING}",
+        "Accept" => "*/*",
+        "Content-Length" => body.bytesize,
+        "Content-Type" => "application/json",
+        "User-Agent" => "Discourse/#{Discourse::VERSION::STRING}",
       }
       begin
-        response = @conn.request(method: :post, path: ANALYZE_COMMENT_ENDPOINT, query: { key: SiteSetting.perspective_google_api_key }, headers: headers, body: body)
+        response =
+          @conn.request(
+            method: :post,
+            path: ANALYZE_COMMENT_ENDPOINT,
+            query: {
+              key: SiteSetting.perspective_google_api_key,
+            },
+            headers: headers,
+            body: body,
+          )
         self.extract_value_from_analyze_comment_response(response.body)
       rescue => e
         begin
           @conn.reset
-        rescue
+        rescue StandardError
           # not much we can do here
         end
         # get rid of bad connection
@@ -161,7 +171,9 @@ module DiscoursePerspective
     # system message bot message or no user
     return false if (post&.user_id).to_i <= 0
     # default not to check secured categories
-    return false if !SiteSetting.perspective_check_secured_categories && post&.topic&.category&.read_restricted?
+    if !SiteSetting.perspective_check_secured_categories && post&.topic&.category&.read_restricted?
+      return false
+    end
     # don't check trashed topics
     return false if !post.topic || post.topic.trashed?
 
@@ -170,7 +182,12 @@ module DiscoursePerspective
     # If the entire post is a URI we skip it. This might seem counter intuitive but
     # Discourse already has settings for max links and images for new users. If they
     # pass it means the administrator specifically allowed them.
-    uri = URI(stripped) rescue nil
+    uri =
+      begin
+        URI(stripped)
+      rescue StandardError
+        nil
+      end
     return false if uri
 
     # Otherwise check the post!

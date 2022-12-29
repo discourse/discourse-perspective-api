@@ -9,24 +9,26 @@
 
 enabled_site_setting :perspective_enabled
 
-require 'excon'
+require "excon"
 
-load File.expand_path('../lib/discourse_perspective.rb', __FILE__)
+load File.expand_path("../lib/discourse_perspective.rb", __FILE__)
 
 PLUGIN_NAME ||= "discourse-perspective-api".freeze
 
 after_initialize do
-  load File.expand_path('../jobs/flag_toxic_post.rb', __FILE__)
-  load File.expand_path('../jobs/inspect_toxic_post.rb', __FILE__)
+  load File.expand_path("../jobs/flag_toxic_post.rb", __FILE__)
+  load File.expand_path("../jobs/inspect_toxic_post.rb", __FILE__)
 
   on(:post_created) do |post, params|
-    if SiteSetting.perspective_flag_post_min_toxicity_enable? && DiscoursePerspective.should_check_post?(post)
+    if SiteSetting.perspective_flag_post_min_toxicity_enable? &&
+         DiscoursePerspective.should_check_post?(post)
       Jobs.enqueue(:flag_toxic_post, post_id: post.id)
     end
   end
 
   on(:post_edited) do |post|
-    if SiteSetting.perspective_flag_post_min_toxicity_enable? && DiscoursePerspective.should_check_post?(post)
+    if SiteSetting.perspective_flag_post_min_toxicity_enable? &&
+         DiscoursePerspective.should_check_post?(post)
       Jobs.enqueue(:flag_toxic_post, post_id: post.id)
     end
   end
@@ -72,12 +74,7 @@ after_initialize do
     end
   end
 
-  Perspective::Engine.routes.draw do
-    post 'post_toxicity' => 'post_toxicity#post_toxicity'
-  end
+  Perspective::Engine.routes.draw { post "post_toxicity" => "post_toxicity#post_toxicity" }
 
-  Discourse::Application.routes.append do
-    mount ::Perspective::Engine, at: '/perspective'
-  end
-
+  Discourse::Application.routes.append { mount ::Perspective::Engine, at: "/perspective" }
 end
