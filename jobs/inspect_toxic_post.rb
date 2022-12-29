@@ -5,12 +5,12 @@ module Jobs
     every 10.minutes
 
     BATCH_SIZE = 1000
-    LAST_CHECKED_POST_ID_KEY = 'last_checked_post_id'
-    LAST_CHECKED_TIME_KEY = 'last_checked_iteration_timestamp'
-    FAILED_POST_ID_KEY = 'failed_post_ids'
+    LAST_CHECKED_POST_ID_KEY = "last_checked_post_id"
+    LAST_CHECKED_TIME_KEY = "last_checked_iteration_timestamp"
+    FAILED_POST_ID_KEY = "failed_post_ids"
 
     def store
-      @store ||= PluginStore.new('discourse-perspective')
+      @store ||= PluginStore.new("discourse-perspective")
     end
 
     def set_last_checked_post_id(val)
@@ -56,19 +56,23 @@ module Jobs
       checked = Set.new
       last_checked_post_id = store.get(LAST_CHECKED_POST_ID_KEY)&.to_i || 0
       last_id = last_checked_post_id
-      Post.includes(:topic).offset(last_checked_post_id).limit(batch_size).find_each do |p|
-        queued.add(p.id)
-        last_id = p.id
-        if DiscoursePerspective.should_check_post?(p)
-          begin
-            DiscoursePerspective.backfill_post_perspective_check(p)
-            checked.add(p.id)
-          rescue => error
-            Rails.logger.info(error)
-            next
+      Post
+        .includes(:topic)
+        .offset(last_checked_post_id)
+        .limit(batch_size)
+        .find_each do |p|
+          queued.add(p.id)
+          last_id = p.id
+          if DiscoursePerspective.should_check_post?(p)
+            begin
+              DiscoursePerspective.backfill_post_perspective_check(p)
+              checked.add(p.id)
+            rescue => error
+              Rails.logger.info(error)
+              next
+            end
           end
         end
-      end
 
       set_last_checked_post_id(last_id)
       failed_post_ids = (queued - checked)
@@ -83,7 +87,8 @@ module Jobs
     def can_start_next_iteration?(last_id)
       last_checked_post_timestamp = store.get(LAST_CHECKED_TIME_KEY)&.to_datetime || 100.years.ago
       last_post_id = Post.order(id: :asc).pluck(:id).last || 1
-      DateTime.now >= last_checked_post_timestamp + SiteSetting.perspective_historical_inspection_period &&
+      DateTime.now >=
+        last_checked_post_timestamp + SiteSetting.perspective_historical_inspection_period &&
         last_id >= last_post_id
     end
 
