@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  js:
+    perspective:
+      perspective_message: "Göndermek üzere olduğunuz şey başkalarına karşı kaba veya saygısızca olarak değerlendirilebilir ve inceleme için işaretlenebilir."
+      composer_edit: "Geri dön ve düzenle"
+      composer_continue: "Göndermeye devam et"
