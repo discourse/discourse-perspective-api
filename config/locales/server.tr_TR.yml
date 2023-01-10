@@ -5,3 +5,16 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  site_settings:
+    perspective_enabled: 'Toksik gönderileri filtrelemek için Discourse Perspective eklentisini etkinleştirin.'
+    perspective_notify_posting_min_toxicity_enable: "Bir kullanıcı göndermeye çalışırken olası toksik içeriği kontrol edin."
+    perspective_flag_post_min_toxicity_enable: "Olası toksik gönderilere bayrak ekleyin ve moderatörleri ve yöneticileri bilgilendirmek için mesajlar gönderin."
+    perspective_flag_post_min_toxicity: "Gönderi toksisitesinin güven seviyesi 0 ila 1 arasında. Varsayılan değer oldukça yüksek. Puanların nasıl hesaplandığını görmek için Perspective API dokümanlarını okuyun."
+    perspective_notify_posting_min_toxicity: "Gönderi toksisitesinin güven seviyesi 0 ila 1 arasında. Kullanıcı incitici bir şey yazdığında oluşturucuda bir bildirim gösterin."
+    perspective_toxicity_model: "Google'ın Perspective API'si için toksisite modelini seçin."
+    perspective_google_api_key: "Perspective API için Google API anahtarı. Şuradan bir tane edinin: https://perspectiveapi.com/"
+    perspective_check_private_message: "Özel mesajları toksisite için kontrol edin ve bayrak ekleyin. (Not: Mesaj içeriği moderatörlere gönderilir). Geri doldurma modu için de geçerlidir."
+    perspective_check_secured_categories: "Potansiyel olarak toksik gönderiler için özel kategorileri kontrol edin."
+    perspective_backfill_posts: "Mevcut gönderilerin toksisitesini sorgulayın ve sonuçları gönderi özel alanlarına kaydedin; Bu mod, gönderiler için canlı denetimi devre dışı bırakır."
+    perspective_historical_inspection_period: "Son yinelemeyi bitirdikten sonra yeni bir sorgu yinelemesi başlatmak için gün cinsinden süre. Yalnızca \"perspective_backfill_posts\" etkinleştirilmişse kullanılır"
+  perspective_flag_message: "Büyük ihtimalle toksik bir gönderi."
