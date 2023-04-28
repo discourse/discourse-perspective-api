@@ -1,7 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { ajax } from "discourse/lib/ajax";
 import I18n from "I18n";
-import bootbox from "bootbox";
+import { inject as service } from "@ember/service";
 
 function initialize(api) {
   const siteSettings = api.container.lookup("site-settings:main");
@@ -9,6 +9,7 @@ function initialize(api) {
   api.modifyClass("controller:composer", {
     pluginId: "discourse-perspective-api",
     _perspective_checked: null,
+    dialog: service(),
 
     perspectiveSave(force) {
       this.set("_perspective_checked", true);
@@ -83,27 +84,22 @@ function initialize(api) {
       })
         .then((response) => {
           if (response && response["score"] !== undefined) {
-            const message = I18n.t("perspective.perspective_message");
+            this.dialog.confirm({
+              confirmButtonLabel: "perspective.composer_edit",
+              confirmButtonClass: "btn-primary perspective-edit-post",
+              didConfirm: () => {
+                if (this.isDestroying || this.isDestroyed) {
+                  return;
+                }
 
-            let buttons = [
-              {
-                label: I18n.t("perspective.composer_continue"),
-                class: "btn perspective-continue-post",
-                callback: () => this.perspectiveSave(force),
+                this.set("disableSubmit", false);
               },
-              {
-                label: I18n.t("perspective.composer_edit"),
-                class: "btn-primary perspective-edit-post",
-                callback: () => {
-                  if (this.isDestroying || this.isDestroyed) {
-                    return;
-                  }
+              message: I18n.t("perspective.perspective_message"),
+              cancelButtonLabel: "perspective.composer_continue",
+              cancelButtonClass: "perspective-continue-post",
+              didCancel: () => this.perspectiveSave(force),
+            });
 
-                  this.set("disableSubmit", false);
-                },
-              },
-            ];
-            bootbox.dialog(message, buttons);
             return;
           } else {
             this.perspectiveSave(force);
