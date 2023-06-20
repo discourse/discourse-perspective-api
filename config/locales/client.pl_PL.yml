@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  js:
+    perspective:
+      perspective_message: "Wygląda na to, że to, co zamierzasz opublikować, może zostać uznane za niegrzeczne lub lekceważące dla innych i może zostać zgłoszone do sprawdzenia."
+      composer_edit: "Wróć i edytuj"
+      composer_continue: "Kontynuuj publikowanie"
