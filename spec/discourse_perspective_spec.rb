@@ -135,12 +135,12 @@ describe DiscoursePerspective do
     let(:post) { Fabricate(:post) }
 
     it "acts if threshold exceeded" do
-      PostAction.expects(:act).once
+      PostActionCreator.expects(:create).once
       DiscoursePerspective.flag_on_scores(score, post)
     end
 
     it "does nothing if score is low" do
-      PostAction.expects(:act).never
+      PostActionCreator.expects(:create).never
       DiscoursePerspective.flag_on_scores(zero_score, post)
     end
   end

@@ -73,10 +73,10 @@ module DiscoursePerspective
 
   def self.flag_on_scores(score, post)
     if score[:score] > SiteSetting.perspective_flag_post_min_toxicity
-      PostAction.act(
+      PostActionCreator.create(
         Discourse.system_user,
         post,
-        PostActionType.types[:notify_moderators],
+        :notify_moderators,
         message: I18n.t("perspective_flag_message"),
       )
     end
