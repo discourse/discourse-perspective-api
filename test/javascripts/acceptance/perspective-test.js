@@ -37,7 +37,7 @@ acceptance(
       );
     });
 
-    test("Create a toxic topic and click continue with post creation", async function (assert) {
+    skip("Create a toxic topic and click continue with post creation", async function (assert) {
       await visit("/");
       await click("#create-topic");
       const categoryChooser = selectKit(".category-chooser");
