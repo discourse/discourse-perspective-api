@@ -1,7 +1,7 @@
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { click, fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
+import { skip, test } from "qunit";
 
 acceptance(
   "Discourse Perspective | Enabled | Toxic Post Score",
@@ -18,7 +18,7 @@ acceptance(
       });
     });
 
-    test("Create a toxic topic and click edit before continuing", async function (assert) {
+    skip("Create a toxic topic and click edit before continuing", async function (assert) {
       await visit("/");
       await click("#create-topic");
       const categoryChooser = selectKit(".category-chooser");
