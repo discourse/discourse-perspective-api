@@ -2,6 +2,7 @@
 
 # name: discourse-perspective-api
 # about: Mark uncivil posts using Google's Perspective API
+# meta_topic_id: 98733
 # version: 1.2
 # authors: Erick Guan
 # url: https://github.com/discourse/discourse-perspective-api
