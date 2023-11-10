@@ -1,4 +1,4 @@
-plugins:
+discourse_perspective:
   perspective_enabled:
     default: false
     client: true
