@@ -34,8 +34,6 @@ after_initialize do
     end
   end
 
-  register_post_custom_field_type(DiscoursePerspective.post_score_field_name, :float)
-
   require_dependency "application_controller"
 
   module ::Perspective
