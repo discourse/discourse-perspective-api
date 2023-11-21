@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 he:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_perspective: "Discourse נקודת מבט"
   js:
     perspective:
       perspective_message: "נראה שמה שתכננת לפרסם עשוי להיות חסר נימוס או מזלזל באחרים ויתכן שיסומן בדגל כדי שיסקרו אותו."
