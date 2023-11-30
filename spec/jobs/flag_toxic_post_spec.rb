@@ -4,27 +4,48 @@ require "rails_helper"
 
 describe Jobs::FlagToxicPost do
   describe ".execute" do
-    it "raises an error when post_id is missing" do
-      expect { subject.execute({}) }.to raise_error(Discourse::InvalidParameters)
+    subject(:execute) { described_class.new.execute(args) }
+
+    context "when post_id is missing" do
+      let(:args) { {} }
+
+      it "raises an error" do
+        expect { execute }.to raise_error(Discourse::InvalidParameters)
+      end
     end
 
-    it "returns when it is given a non existed post" do
-      expect(subject.execute(post_id: 0)).to eq nil
+    context "when it is given a non existed post" do
+      let(:args) { { post_id: 0 } }
+
+      it "returns" do
+        expect(execute).to be_nil
+      end
     end
 
     context "with post" do
       let(:post) { Fabricate(:post) }
+      let(:args) { { post_id: post.id } }
 
-      it "returns when the plugin it not enabled" do
-        SiteSetting.perspective_enabled = false
-        SiteSetting.perspective_flag_post_min_toxicity_enable = true
-        expect(subject.execute(post_id: post.id)).to eq nil
+      context "when the plugin is not enabled" do
+        before do
+          SiteSetting.perspective_enabled = false
+          SiteSetting.perspective_flag_post_min_toxicity_enable = true
+        end
+
+        it "returns" do
+          expect(execute).to be_nil
+        end
       end
 
-      it "returns when the flag is not enabled" do
-        SiteSetting.perspective_enabled = true
-        SiteSetting.perspective_flag_post_min_toxicity_enable = false
-        expect(subject.execute(post_id: post.id)).to eq nil
+      context "when the flag is not enabled" do
+        before do
+          SiteSetting.perspective_enabled = true
+          SiteSetting.perspective_flag_post_min_toxicity_enable = false
+        end
+
+        it "returns" do
+          expect(execute).to be_nil
+        end
       end
     end
   end

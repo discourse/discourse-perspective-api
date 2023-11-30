@@ -3,10 +3,14 @@
 require "rails_helper"
 
 describe Jobs::InspectToxicPost do
-  describe ".set_last_checked_post_id" do
+  subject(:job) { described_class.new }
+
+  describe "#set_last_checked_post_id" do
+    subject(:set_last_checked_post_id) { job.set_last_checked_post_id(0) }
+
     it "sets value" do
       freeze_time
-      subject.set_last_checked_post_id(0)
+      set_last_checked_post_id
       expect(PluginStore.get("discourse-perspective", "last_checked_post_id")).to eq 0
       expect(
         PluginStore.get("discourse-perspective", "last_checked_iteration_timestamp"),
@@ -14,25 +18,37 @@ describe Jobs::InspectToxicPost do
     end
   end
 
-  describe ".execute" do
-    it "returns when the plugin is not enabled" do
-      SiteSetting.perspective_enabled = false
-      SiteSetting.perspective_backfill_posts = true
-      expect(subject.execute({})).to eq nil
+  describe "#execute" do
+    subject(:execute) { job.execute({}) }
+
+    context "when the plugin is not enabled" do
+      before do
+        SiteSetting.perspective_enabled = false
+        SiteSetting.perspective_backfill_posts = true
+      end
+
+      it "returns" do
+        expect(execute).to be_nil
+      end
     end
 
-    it "returns when the backfill mode is not enabled" do
-      SiteSetting.perspective_enabled = true
-      SiteSetting.perspective_backfill_posts = false
-      expect(subject.execute({})).to eq nil
+    context "when the backfill mode is not enabled" do
+      before do
+        SiteSetting.perspective_enabled = true
+        SiteSetting.perspective_backfill_posts = false
+      end
+
+      it "returns" do
+        expect(execute).to be_nil
+      end
     end
   end
 
-  describe ".retry_failed_checks" do
+  describe "#retry_failed_checks" do
     after { PluginStore.set("discourse-perspective", "failed_post_ids", []) }
 
     it "retruns while remaining batch size is depleted" do
-      expect(subject.retry_failed_checks(-1)).to eq nil
+      expect(job.retry_failed_checks(-1)).to eq nil
     end
 
     it "checks posts" do
@@ -40,7 +56,7 @@ describe Jobs::InspectToxicPost do
       DiscoursePerspective.stubs(:backfill_post_perspective_check).returns(true)
 
       PluginStore.set("discourse-perspective", "failed_post_ids", [1, 2])
-      expect(subject.retry_failed_checks(2)).to eq 0
+      expect(job.retry_failed_checks(2)).to eq 0
       expect(PluginStore.get("discourse-perspective", "failed_post_ids")).to eq []
 
       DiscoursePerspective.unstub(:should_check_post?)
@@ -52,7 +68,7 @@ describe Jobs::InspectToxicPost do
       DiscoursePerspective.stubs(:backfill_post_perspective_check).raises
 
       PluginStore.set("discourse-perspective", "failed_post_ids", [1, 2])
-      expect(subject.retry_failed_checks(2)).to eq 0
+      expect(job.retry_failed_checks(2)).to eq 0
       expect(PluginStore.get("discourse-perspective", "failed_post_ids")).to eq []
 
       DiscoursePerspective.unstub(:should_check_post?)
@@ -60,19 +76,14 @@ describe Jobs::InspectToxicPost do
     end
   end
 
-  describe ".check_posts" do
-    before(:each) do
-      @post1 = Fabricate(:post)
-      @post2 = Fabricate(:post)
-    end
+  describe "#check_posts" do
+    let!(:post1) { Fabricate(:post) }
+    let!(:post2) { Fabricate(:post) }
 
-    after(:each) do
-      PluginStore.set("discourse-perspective", "failed_post_ids", [])
-      Post.delete_all
-    end
+    after(:each) { PluginStore.set("discourse-perspective", "failed_post_ids", []) }
 
     it "retruns while remaining batch size is depleted" do
-      expect(subject.retry_failed_checks(-1)).to eq nil
+      expect(job.retry_failed_checks(-1)).to eq nil
     end
 
     it "checks posts" do
@@ -81,8 +92,8 @@ describe Jobs::InspectToxicPost do
 
       PluginStore.set("discourse-perspective", "last_checked_post_id", 0)
       SiteSetting.perspective_historical_inspection_period = 999_999_999
-      subject.check_posts(2)
-      expect(PluginStore.get("discourse-perspective", "last_checked_post_id")).to eq @post2.id
+      job.check_posts(2)
+      expect(PluginStore.get("discourse-perspective", "last_checked_post_id")).to eq post2.id
 
       DiscoursePerspective.unstub(:should_check_post?)
       DiscoursePerspective.unstub(:backfill_post_perspective_check)
@@ -94,40 +105,42 @@ describe Jobs::InspectToxicPost do
 
       PluginStore.set("discourse-perspective", "last_checked_post_id", 0)
       SiteSetting.perspective_historical_inspection_period = 999_999_999
-      subject.check_posts(2)
-      expect(PluginStore.get("discourse-perspective", "last_checked_post_id")).to eq @post2.id
-      PluginStore.set("discourse-perspective", "failed_post_ids", [@post1.id, @post2.id])
+      job.check_posts(2)
+      expect(PluginStore.get("discourse-perspective", "last_checked_post_id")).to eq post2.id
+      PluginStore.set("discourse-perspective", "failed_post_ids", [post1.id, post2.id])
     end
   end
 
-  describe ".start_new_iteration" do
+  describe "#start_new_iteration" do
+    subject(:start_new_iteration) { job.start_new_iteration }
+
     it "set values" do
       PluginStore.set("discourse-perspective", "last_checked_post_id", 1)
-      subject.start_new_iteration
+      start_new_iteration
       expect(PluginStore.get("discourse-perspective", "last_checked_post_id")).to eq 0
     end
   end
 
-  describe ".can_start_next_iteration?" do
+  describe "#can_start_next_iteration?" do
     it "doesn't reset when last check is completed not long enough" do
       freeze_time
       PluginStore.set("discourse-perspective", "last_checked_iteration_timestamp", DateTime.now)
       SiteSetting.perspective_historical_inspection_period = 999_999_999
-      expect(subject.can_start_next_iteration?(99_999_999_999)).to eq false
+      expect(job.can_start_next_iteration?(99_999_999_999)).to eq false
     end
 
     it "doesn't reset when the last check is not complete" do
       freeze_time
       PluginStore.set("discourse-perspective", "last_checked_iteration_timestamp", DateTime.now)
       SiteSetting.perspective_historical_inspection_period = 0
-      expect(subject.can_start_next_iteration?(0)).to eq false
+      expect(job.can_start_next_iteration?(0)).to eq false
     end
 
     it "resets when last check is complete and completed long enough" do
       freeze_time
       PluginStore.set("discourse-perspective", "last_checked_iteration_timestamp", DateTime.now)
       SiteSetting.perspective_historical_inspection_period = 0
-      expect(subject.can_start_next_iteration?(99_999_999_999)).to eq true
+      expect(job.can_start_next_iteration?(99_999_999_999)).to eq true
     end
   end
 end
