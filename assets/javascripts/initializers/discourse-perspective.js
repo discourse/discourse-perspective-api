@@ -4,12 +4,12 @@ import I18n from "I18n";
 import { inject as service } from "@ember/service";
 
 function initialize(api) {
-  const siteSettings = api.container.lookup("site-settings:main");
-
   api.modifyClass("controller:composer", {
     pluginId: "discourse-perspective-api",
+
     _perspective_checked: null,
     dialog: service(),
+    siteSettings: service(),
 
     perspectiveSave(force) {
       this.set("_perspective_checked", true);
@@ -51,10 +51,10 @@ function initialize(api) {
       }
 
       const bypassPM =
-        !siteSettings.perspective_check_private_message &&
+        !this.siteSettings.perspective_check_private_message &&
         this.get("topic.isPrivateMessage");
       const bypassSecuredCategories =
-        !siteSettings.perspective_check_secured_categories &&
+        !this.siteSettings.perspective_check_secured_categories &&
         this.get("model.category.read_restricted");
       const bypassCheck = bypassPM || bypassSecuredCategories;
 
@@ -117,7 +117,7 @@ export default {
   name: "discourse-perspective-api",
 
   initialize(container) {
-    const siteSettings = container.lookup("site-settings:main");
+    const siteSettings = container.lookup("service:site-settings");
     if (
       siteSettings.perspective_enabled &&
       siteSettings.perspective_notify_posting_min_toxicity_enable
