@@ -1,7 +1,7 @@
-import { withPluginApi } from "discourse/lib/plugin-api";
-import { ajax } from "discourse/lib/ajax";
-import I18n from "I18n";
 import { inject as service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import I18n from "I18n";
 
 function initialize(api) {
   api.modifyClass("controller:composer", {
