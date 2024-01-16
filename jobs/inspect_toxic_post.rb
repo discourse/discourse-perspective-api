@@ -54,7 +54,7 @@ module Jobs
       return if batch_size <= 0
       queued = Set.new
       checked = Set.new
-      last_checked_post_id = store.get(LAST_CHECKED_POST_ID_KEY)&.to_i || 0
+      last_checked_post_id = store.get(LAST_CHECKED_POST_ID_KEY).to_i
       last_id = last_checked_post_id
       Post
         .includes(:topic)

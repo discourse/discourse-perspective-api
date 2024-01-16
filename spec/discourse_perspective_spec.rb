@@ -52,7 +52,6 @@ describe DiscoursePerspective do
       '{ "attributeScores": { "TOXICITY": { "spanScores": [ { "begin": 0, "end": 80, "score": { "value": 0.026585817, "type": "PROBABILITY" } } ], "summaryScore": { "value": 0.026585817, "type": "PROBABILITY" } } }, "languages": [ "en" ] }'
     end
     let(:severe_toxicity_response) do
-      # rubocop:disable Layout/LineLength
       '{ "attributeScores": { "SEVERE_TOXICITY": { "spanScores": [ { "begin": 0, "end": 80, "score": { "value": 0.0039000872, "type": "PROBABILITY" } } ], "summaryScore": { "value": 0.0039000872, "type": "PROBABILITY" } } }, "languages": [ "en" ] }'
       # rubocop:enable Layout/LineLength
     end

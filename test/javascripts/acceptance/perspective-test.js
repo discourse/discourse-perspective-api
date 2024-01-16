@@ -1,7 +1,7 @@
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { skip, test } from "qunit";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance(
   "Discourse Perspective | Enabled | Toxic Post Score",
