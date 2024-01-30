@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 de:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_perspective: "Discourse – Perspektive"
   js:
     perspective:
       perspective_message: "Es sieht so aus, als ob das, was du veröffentlichen möchtest, als unhöflich oder respektlos gegenüber anderen angesehen und zur Überprüfung gesendet werden könnte."

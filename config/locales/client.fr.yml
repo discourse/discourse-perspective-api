@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 fr:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_perspective: "Perspective de Discourse"
   js:
     perspective:
       perspective_message: "Il semble que ce que vous êtes sur le point de publier risque d'être considéré comme grossier ou irrespectueux envers les autres et d'être signalé pour examen."

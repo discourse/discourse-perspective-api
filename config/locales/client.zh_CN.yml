@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_perspective: "Discourse Perspective"
   js:
     perspective:
       perspective_message: "您要发布的内容可能会被视为言辞粗鲁或不尊重他人，并可能会被举报以供审核。"

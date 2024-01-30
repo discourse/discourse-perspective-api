@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 ru:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_perspective: "Плагин Discourse Perspective"
   js:
     perspective:
       perspective_message: "То, что вы собираетесь разместить, может быть расценено как грубость или неуважение к другим, и может быть помечено для проверки."

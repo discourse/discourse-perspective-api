@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 fi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_perspective: "Discourse Perspective"
   js:
     perspective:
       perspective_message: "Näyttää siltä, että julkaisemaasi sisältöä voidaan pitää epäkohteliaana tai epäkunnioittavana muita kohtaan, ja se voidaan merkitä käsiteltäväksi."

@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 ar:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_perspective: "Discourse Perspective"
   js:
     perspective:
       perspective_message: "يبدو أنك بصدد نشر شيء قد يُعتبَر فظًا أو لا يحترم الآخرين، وقد يتم الإبلاغ عنه للمراجعة."
