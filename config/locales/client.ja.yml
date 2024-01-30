@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 ja:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_perspective: "Discourse 見解"
   js:
     perspective:
       perspective_message: "あなたが投稿しようとしているものは、他のユーザーに失礼または無礼と見なされ、要レビューとして通報される可能性があるようです。"

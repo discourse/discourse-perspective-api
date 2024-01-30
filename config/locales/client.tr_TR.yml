@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_perspective: "Discourse Perspektif"
   js:
     perspective:
       perspective_message: "Göndermek üzere olduğunuz şey başkalarına karşı kaba veya saygısızca olarak değerlendirilebilir ve inceleme için bayrak eklenebilir."

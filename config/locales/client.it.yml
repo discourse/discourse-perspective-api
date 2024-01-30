@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 it:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_perspective: "Prospettiva Discourse"
   js:
     perspective:
       perspective_message: "Il messaggio che stai per pubblicare potrebbe essere considerato scortese o irrispettoso nei confronti degli altri e potrebbe essere segnalato per essere sottoposto a revisione."
