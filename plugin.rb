@@ -11,13 +11,15 @@ enabled_site_setting :perspective_enabled
 
 require "excon"
 
-load File.expand_path("../lib/discourse_perspective.rb", __FILE__)
-
-PLUGIN_NAME ||= "discourse-perspective-api".freeze
+require_relative "lib/discourse_perspective"
 
 after_initialize do
-  load File.expand_path("../jobs/flag_toxic_post.rb", __FILE__)
-  load File.expand_path("../jobs/inspect_toxic_post.rb", __FILE__)
+  module ::DiscoursePerspectiveApi
+    PLUGIN_NAME = "discourse-perspective-api"
+  end
+
+  require_relative "jobs/flag_toxic_post"
+  require_relative "jobs/inspect_toxic_post"
 
   on(:post_created) do |post, params|
     if SiteSetting.perspective_flag_post_min_toxicity_enable? &&
@@ -37,7 +39,7 @@ after_initialize do
 
   module ::Perspective
     class PostToxicityController < ::ApplicationController
-      requires_plugin PLUGIN_NAME
+      requires_plugin DiscoursePerspectiveApi::PLUGIN_NAME
 
       def post_toxicity
         if current_user
@@ -67,7 +69,7 @@ after_initialize do
     end
 
     class Engine < ::Rails::Engine
-      engine_name PLUGIN_NAME
+      engine_name DiscoursePerspectiveApi::PLUGIN_NAME
       isolate_namespace Perspective
     end
   end
