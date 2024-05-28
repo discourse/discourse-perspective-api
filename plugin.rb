@@ -64,7 +64,7 @@ after_initialize do
       private
 
       def check_content(content)
-        content&.present? && DiscoursePerspective.check_content_toxicity(content, current_user)
+        content.present? && DiscoursePerspective.check_content_toxicity(content, current_user)
       end
     end
 
