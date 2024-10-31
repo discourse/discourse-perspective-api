@@ -30,16 +30,19 @@ function initialize(api) {
       const result = this._super(force);
 
       const perspectiveEnabled = this.siteSettings.perspective_enabled;
-      const perspectiveNotifyUser = this.siteSettings.perspective_notify_posting_min_toxicity_enable;
+      const perspectiveNotifyUser =
+        this.siteSettings.perspective_notify_posting_min_toxicity_enable;
 
       if (perspectiveEnabled && perspectiveNotifyUser) {
         const isPM = this.get("topic.isPrivateMessage");
         const checkPM = this.siteSettings.perspective_check_private_message;
 
-        const isSecureCategory = this.get("model.category.read_restricted"); 
-        const checkSecureCategories = this.siteSettings.perspective_check_secured_categories;
+        const isSecureCategory = this.get("model.category.read_restricted");
+        const checkSecureCategories =
+          this.siteSettings.perspective_check_secured_categories;
 
-        const check = !isPM || checkPM || !isSecureCategory || checkSecureCategories;
+        const check =
+          !isPM || checkPM || !isSecureCategory || checkSecureCategories;
 
         if (check) {
           this.set("disableSubmit", true);
@@ -51,7 +54,11 @@ function initialize(api) {
     },
 
     perspectiveCheckToxicity(composer, force) {
-      const concat = ["title", "raw", "reply"].map((item) => composer.get(item)).filter(Boolean).join(" ").trim();
+      const concat = ["title", "raw", "reply"]
+        .map((item) => composer.get(item))
+        .filter(Boolean)
+        .join(" ")
+        .trim();
 
       return ajax("/perspective/post_toxicity", {
         type: "POST",
