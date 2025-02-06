@@ -1,7 +1,7 @@
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import I18n from "I18n";
+import { i18n } from "discourse-i18n";
 
 function initialize(api) {
   api.modifyClass("service:composer", {
@@ -67,7 +67,7 @@ function initialize(api) {
         .then((response) => {
           if (response && response["score"] !== undefined) {
             this.dialog.confirm({
-              message: I18n.t("perspective.perspective_message"),
+              message: i18n("perspective.perspective_message"),
               confirmButtonLabel: "perspective.composer_edit",
               confirmButtonClass: "btn-primary perspective-edit-post",
               cancelButtonLabel: "perspective.composer_continue",
