@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "rails_helper"
-require "fakeweb"
 
 API_ENDPOINT = "https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze?key="
 API_RESPONSE_TOXICITY_BODY =
