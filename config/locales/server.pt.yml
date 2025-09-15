@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 pt:
+  site_settings:
+    perspective_enabled: 'Ative o plug-in Discourse Perspective para filtrar publicações tóxicas.'
+    perspective_notify_posting_min_toxicity_enable: "Verifique o conteúdo possivelmente tóxico enquanto um utilizador tenta submetê-lo."
+    perspective_flag_post_min_toxicity_enable: "Sinalize possíveis publicações tóxicas e envie mensagens para notificar os moderadores e os administradores."
+    perspective_check_secured_categories: "Verifique as categorias privadas para publicações potencialmente tóxicas."
+  perspective_flag_message: "Altamente provável uma publicação tóxica."

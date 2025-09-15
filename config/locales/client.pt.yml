@@ -5,3 +5,13 @@
 # https://translate.discourse.org/
 
 pt:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_perspective: "Discourse Perspective"
+  js:
+    perspective:
+      perspective_message: "Parece que o que está prestes a publicar pode ser considerado rude ou desrespeitoso para os outros, e pode ser sinalizado para revisão."
+      composer_edit: "Retroceder e editar"
+      composer_continue: "Continuar a publicar"
