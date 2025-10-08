@@ -102,7 +102,7 @@ export default {
       siteSettings.perspective_enabled &&
       siteSettings.perspective_notify_posting_min_toxicity_enable
     ) {
-      withPluginApi("0.8.17", initialize);
+      withPluginApi(initialize);
     }
   },
 };

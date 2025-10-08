@@ -56,7 +56,7 @@ after_initialize do
               render json: {}
             end
           rescue => e
-            render json: { errors: [e.message] }, status: 403
+            render json: { errors: [e.message] }, status: :forbidden
           end
         end
       end
