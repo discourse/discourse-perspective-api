@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscoursePerspective do
   before { SiteSetting.perspective_enabled = true }
 

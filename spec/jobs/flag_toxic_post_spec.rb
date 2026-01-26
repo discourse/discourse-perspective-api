@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Jobs::FlagToxicPost do
   describe ".execute" do
     subject(:execute) { described_class.new.execute(args) }
