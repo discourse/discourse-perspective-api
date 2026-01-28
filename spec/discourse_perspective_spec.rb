@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 API_ENDPOINT = "https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze?key="
 API_RESPONSE_TOXICITY_BODY =
   '{"attributeScores": {"TOXICITY": {"spanScores": [{"begin": 0,"end": 11,"score": {"value": 0.015122943,"type": "PROBABILITY"}}],"summaryScore": {"value": 0.015122943,"type": "PROBABILITY"}}},"languages": ["en"]}'
