@@ -1,6 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { skip, test } from "qunit";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance(
@@ -31,10 +31,9 @@ acceptance(
       await click("#reply-control button.create");
 
       await click(".perspective-edit-post");
-      assert.notOk(
-        exists(".cooked"),
-        "new topic was not created, composer is still open"
-      );
+      assert
+        .dom(".cooked")
+        .doesNotExist("new topic was not created, composer is still open");
     });
 
     skip("Create a toxic topic and click continue with post creation", async function (assert) {
@@ -50,7 +49,7 @@ acceptance(
       await click("#reply-control button.create");
 
       await click(".perspective-continue-post");
-      assert.ok(exists(".cooked"), "new topic created");
+      assert.dom(".cooked").exists("new topic created");
     });
   }
 );
@@ -79,6 +78,6 @@ acceptance("Discourse Perspective | Enabled | No Post Score", function (needs) {
     await fillIn(".d-editor-input", "everyone is a doo-doo head!");
 
     await click("#reply-control button.create");
-    assert.ok(exists(".cooked"), "new topic created");
+    assert.dom(".cooked").exists("new topic created");
   });
 });
