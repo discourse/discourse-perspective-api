@@ -51,7 +51,8 @@ module DiscoursePerspective
 
   def self.unload_json(response)
     begin
-      MultiJson.load(response)
+      json = MultiJson.load(response)
+      json == nil ? {} : json
     rescue StandardError
       {}
     end
