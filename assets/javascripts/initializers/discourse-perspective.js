@@ -1,5 +1,6 @@
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+import prepareFormTemplateData from "discourse/lib/form-template-validation";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
 
@@ -7,19 +8,15 @@ function initialize(api) {
   api.modifyClass("service:composer", {
     pluginId: "discourse-perspective-api",
 
+    _perspective_checked: null,
+
     dialog: service(),
     siteSettings: service(),
 
     perspectiveSave(force) {
-      const result = this.save(force);
-
-      // it's valid for save() to return null since we do that in core,
-      // handle that here because sometimes we return a promise
-      if (result != null && typeof result.then === "function") {
-        result.finally(() => this.set("disableSubmit", false));
-      } else {
-        this.set("disableSubmit", false);
-      }
+      this._perspective_checked = true;
+      this.set("disableSubmit", false);
+      return this.save(force);
     },
 
     save(force) {
@@ -27,7 +24,10 @@ function initialize(api) {
         return;
       }
 
-      const result = this._super(force);
+      if (this._perspective_checked) {
+        this._perspective_checked = false;
+        return this._super(force);
+      }
 
       const perspectiveEnabled = this.siteSettings.perspective_enabled;
       const perspectiveNotifyUser =
@@ -45,12 +45,24 @@ function initialize(api) {
           !isPM || checkPM || !isSecureCategory || checkSecureCategories;
 
         if (check) {
+          // Set model.reply so the toxicity check sees the form content.
+          if (this.hasFormTemplate) {
+            const formTemplateData = prepareFormTemplateData(
+              document.querySelector("#form-template-form"),
+              this.selectedFormTemplate
+            );
+            if (!formTemplateData) {
+              return;
+            }
+            this.model.set("reply", formTemplateData);
+          }
+
           this.set("disableSubmit", true);
           return this.perspectiveCheckToxicity(this.model, force);
         }
       }
 
-      return result;
+      return this._super(force);
     },
 
     perspectiveCheckToxicity(composer, force) {
